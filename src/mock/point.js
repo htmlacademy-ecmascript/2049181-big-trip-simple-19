@@ -3,7 +3,8 @@ import {
   getRandomArrayElement,
   getRandomInteger
 } from './utils.js';
-import { MAX_OFFERS, PointsAmount, TYPES } from './const.js';
+import { MAX_OFFERS, PointsAmount } from './const.js';
+import { TYPES } from '../const.js';
 import { offersByType } from './offer.js';
 import { destinations } from './destination.js';
 

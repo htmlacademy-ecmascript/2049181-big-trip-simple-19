@@ -14,7 +14,7 @@ const generateDescription = () => getMultipleRandomArrayElements(descriptions, 1
   .join(' ');
 
 const generatePictures = () => Array.from(
-  {length: getRandomInteger(1, MAX_PICTURES)},
+  { length: getRandomInteger(1, MAX_PICTURES) },
   generatePicture
 );
 
@@ -35,4 +35,4 @@ for (let i = 1; i <= cities.length; i++) {
   destinations.push(destination);
 }
 
-export {destinations};
+export { destinations };

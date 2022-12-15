@@ -1,4 +1,3 @@
-const TYPES = ['taxi', 'bus', 'train', 'ship', 'drive', 'flight', 'check-in', 'sightseeing', 'restaurant'];
 const MAX_OFFERS = 3;
 const MAX_PICTURES = 5;
 
@@ -29,7 +28,6 @@ const cities = [
 export {
   MAX_PICTURES,
   MAX_OFFERS,
-  TYPES,
   PointsAmount,
   descriptions,
   cities
