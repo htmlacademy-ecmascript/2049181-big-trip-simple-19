@@ -18,21 +18,16 @@ const generatePictures = () => Array.from(
   generatePicture
 );
 
-const generateDestinationName = () => getRandomArrayElement(cities);
+const generateDestination = (name,id) => ({
 
-const generateDestination = (id) => ({
-
-  id: id,
+  id,
   description: generateDescription(),
-  name: generateDestinationName(),
+  name,
   pictures: generatePictures()
 });
 
 const destinations = [];
 
-for (let i = 1; i <= cities.length; i++) {
-  const destination = generateDestination(i);
-  destinations.push(destination);
-}
+cities.forEach((city, id) => destinations.push(generateDestination(city, id)));
 
 export { destinations };

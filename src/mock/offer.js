@@ -6,7 +6,7 @@ const offersByType = [
     offers: [
       {
         id: 1,
-        title: 'Choose the radio station',
+        title: 'Choose music',
         price: getRandomInteger(25, 900)
       },
       {
@@ -16,7 +16,7 @@ const offersByType = [
       },
       {
         id: 3,
-        title: 'Upgrade car comfort class',
+        title: 'Upgrade class',
         price: getRandomInteger(25, 900)
       },
     ]
@@ -26,12 +26,12 @@ const offersByType = [
     offers: [
       {
         id: 1,
-        title: 'Choose the radio station',
+        title: 'Choose radio',
         price: getRandomInteger(25, 900)
       },
       {
         id: 2,
-        title: 'Smoke in the bus',
+        title: 'Nice driver',
         price: getRandomInteger(25, 900)
       },
       {
@@ -46,7 +46,7 @@ const offersByType = [
     offers: [
       {
         id: 1,
-        title: 'Place not near the toilet',
+        title: 'A glass of tea',
         price: getRandomInteger(25, 900)
       },
       {
@@ -66,17 +66,17 @@ const offersByType = [
     offers: [
       {
         id: 1,
-        title: 'Extra pills for motion sickness',
+        title: 'Extra dinner',
         price: getRandomInteger(25, 900)
       },
       {
         id: 2,
-        title: 'Personal life buoy',
+        title: 'Personal boat',
         price: getRandomInteger(25, 900)
       },
       {
         id: 3,
-        title: 'Dinner with the captain',
+        title: 'Dinner with cap',
         price: getRandomInteger(25, 900)
       },
     ]
@@ -86,17 +86,17 @@ const offersByType = [
     offers: [
       {
         id: 1,
-        title: 'New air freshener',
+        title: 'Child seat',
         price: getRandomInteger(25, 900)
       },
       {
         id: 2,
-        title: 'Radio tape recorder',
+        title: 'New tyres',
         price: getRandomInteger(25, 900)
       },
       {
         id: 3,
-        title: 'Full tank of gasoline',
+        title: 'Full tank of gas',
         price: getRandomInteger(25, 900)
       },
     ]
@@ -131,7 +131,7 @@ const offersByType = [
       },
       {
         id: 2,
-        title: 'Swim in the middle of the lake',
+        title: 'Swim in fontain',
         price: getRandomInteger(25, 900)
       },
       {
@@ -146,7 +146,7 @@ const offersByType = [
     offers: [
       {
         id: 1,
-        title: 'Climb the highest tower',
+        title: 'Climb the roof',
         price: getRandomInteger(25, 900)
       },
       {
@@ -156,7 +156,7 @@ const offersByType = [
       },
       {
         id: 3,
-        title: 'Walk around the local markets',
+        title: 'Walk around',
         price: getRandomInteger(25, 900)
       },
     ]
@@ -171,12 +171,12 @@ const offersByType = [
       },
       {
         id: 2,
-        title: 'Slap the waitress on the ass',
+        title: 'Extra bread',
         price: getRandomInteger(25, 900)
       },
       {
         id: 3,
-        title: 'Drink until you burst',
+        title: 'Drink all',
         price: getRandomInteger(25, 900)
       }
     ]

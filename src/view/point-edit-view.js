@@ -1,8 +1,7 @@
-import { createElement } from '../render.js';
 import { TYPES } from '../const.js';
+import { createElement } from '../render.js';
 import { offersByType } from '../mock/offer.js';
-
-const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+import { capitalize } from '../utils.js';
 
 const createEventTypeItemTemplate = (type) => (
   `<div class="event__type-item">
