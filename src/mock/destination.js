@@ -28,6 +28,9 @@ const generateDestination = (name,id) => ({
 
 const destinations = [];
 
-cities.forEach((city, id) => destinations.push(generateDestination(city, id)));
+cities
+  .slice()
+  .sort(() => 0.5 - Math.random())
+  .forEach((city, id) => destinations.push(generateDestination(city, id)));
 
 export { destinations };
