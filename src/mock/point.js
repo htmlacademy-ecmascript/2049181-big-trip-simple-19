@@ -33,4 +33,4 @@ const generatePoint = () => {
 
 const generatePoints = () => Array.from({length: getRandomInteger(PointsAmount.MIN, PointsAmount.MAX)}, generatePoint);
 
-export {generatePoints};
+export { generatePoints };

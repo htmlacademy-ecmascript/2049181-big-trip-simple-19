@@ -14,4 +14,4 @@ const getMultipleRandomArrayElements = (items, min, max) => items
   .sort(() => 0.5 - Math.random())
   .slice(0, getRandomInteger(min, max));
 
-export {getRandomArrayElement, getMultipleRandomArrayElements, getRandomInteger};
+export { getRandomArrayElement, getMultipleRandomArrayElements, getRandomInteger };

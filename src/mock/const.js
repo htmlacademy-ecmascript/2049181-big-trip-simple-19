@@ -2,7 +2,7 @@ const MAX_OFFERS = 3;
 const MAX_PICTURES = 5;
 
 const PointsAmount = {
-  MIN: 1,
+  MIN: 3,
   MAX: 5
 };
 
