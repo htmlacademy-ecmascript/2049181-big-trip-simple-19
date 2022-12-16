@@ -3,7 +3,7 @@ const MAX_PICTURES = 5;
 
 const PointsAmount = {
   MIN: 3,
-  MAX: 5
+  MAX: 6
 };
 
 const descriptions = [

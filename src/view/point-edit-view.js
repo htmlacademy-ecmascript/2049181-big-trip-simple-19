@@ -44,7 +44,7 @@ const createOfferTemplate = (offer, selectedOffers) => {
   );
 };
 
-const createOffersTemplate = ( selectedOffers, allOffers) => {
+const createOffersTemplate = (selectedOffers, allOffers) => {
   const resultOffers = [];
 
   allOffers.forEach((item) => resultOffers.push(createOfferTemplate(item, selectedOffers)));
