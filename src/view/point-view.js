@@ -48,7 +48,7 @@ const createTemplate = (point) => {
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${capitalize(type)} ${destination}</h3>
+      <h3 class="event__title">${capitalize(type)} ${destination.name}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="${humanizeDate(dateFrom)}T${humanizeMinutes(dateFrom)}">${humanizeMinutes(dateFrom)}</time>
@@ -72,23 +72,26 @@ const createTemplate = (point) => {
 };
 
 export default class PointView {
+  #element = null;
+  #point = null;
+
   constructor ({point}) {
-    this.point = point;
+    this.#point = point;
   }
 
-  getTemplate() {
-    return createTemplate(this.point);
+  get template() {
+    return createTemplate(this.#point);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
