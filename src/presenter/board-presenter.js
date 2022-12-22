@@ -2,6 +2,7 @@ import { render, RenderPosition } from '../render.js';
 import { getOffersByPointType } from '../utils.js';
 import SortView from '../view/sort-view.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
+import ListEmptyView from '../view/list-empty-view.js';
 import PointEditView from '../view/point-edit-view.js';
 import PointView from '../view/point-view.js';
 
@@ -10,9 +11,9 @@ export default class BoardPresenter {
   #boardContainer = null;
   #pointsModel = null;
   #offersModel = null;
-  #points = null;
-  #destinations = null;
-  #offers = null;
+  #points = [];
+  #destinations = [];
+  #offers = [];
   #tripEventsList = new TripEventsListView();
 
   constructor({
@@ -31,6 +32,11 @@ export default class BoardPresenter {
     this.#points = [...this.#pointsModel.points];
     this.#destinations = [...this.#destinationsModel.destinations];
     this.#offers = [...this.#offersModel.offers];
+
+    if (this.#points.length < 1) {
+      render(new ListEmptyView(), this.#boardContainer);
+      return;
+    }
 
     render(new SortView(), this.#boardContainer.firstElementChild, RenderPosition.AFTEREND);
     render(this.#tripEventsList, this.#boardContainer);
