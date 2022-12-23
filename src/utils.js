@@ -5,7 +5,9 @@ const DATE_FORMAT = 'YYYY-MM-DD';
 const MINUTES_FORMAT = 'HH:MM';
 const DATE_EDIT_FORMAT = 'DD/MM/YY';
 
-const capitalize = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+const capitalize = (text) => text
+  ? text.charAt(0).toUpperCase() + text.slice(1)
+  : '';
 
 const humanizeTopicDate = (date) => date
   ? dayjs(date).format(DATE_TOPIC_FORMAT)
