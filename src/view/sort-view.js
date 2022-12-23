@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const createSortItemTemplate = (item, label, isChecked = false, isDisabled = true,) => {
   const handleDisabledClass = (disabledFlag) => disabledFlag
@@ -27,22 +27,8 @@ const createTemplate = () => (
   </form>`
 );
 
-export default class SortView {
-  #element = null;
-
+export default class SortView extends AbstractView{
   get template() {
     return createTemplate();
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

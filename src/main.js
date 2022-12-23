@@ -3,7 +3,7 @@ import DestinationsModel from './model/destinations-model.js';
 import OffersModel from './model/offers-model.js';
 import FilterView from './view/filter-view.js';
 import BoardPresenter from './presenter/board-presenter.js';
-import { render } from './render.js';
+import { render } from './framework/render.js';
 
 const siteBodyElement = document.querySelector('.page-body');
 const siteFiltersContainerElement = siteBodyElement.querySelector('.trip-controls__filters');
