@@ -1,5 +1,5 @@
 import { TYPES } from '../const.js';
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {
   capitalize,
   humanizeMinutes,
@@ -130,27 +130,15 @@ const createTemplate = (point) => {
   );
 };
 
-export default class PointEditView {
-  #element = null;
+export default class PointEditView extends AbstractView {
   #point = null;
 
   constructor ({point}) {
+    super();
     this.#point = point;
   }
 
   get template() {
     return createTemplate(this.#point);
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

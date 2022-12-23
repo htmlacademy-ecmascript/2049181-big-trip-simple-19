@@ -1,10 +1,10 @@
-import { render, RenderPosition } from '../render.js';
+import { render, RenderPosition } from '../framework/render.js';
 import { getOffersByPointType } from '../utils.js';
-import SortView from '../view/sort-view.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import PointEditView from '../view/point-edit-view.js';
 import PointView from '../view/point-view.js';
+import SortView from '../view/sort-view.js';
 
 export default class BoardPresenter {
   #destinationsModel = null;
