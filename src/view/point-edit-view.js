@@ -132,13 +132,29 @@ const createTemplate = (point) => {
 
 export default class PointEditView extends AbstractView {
   #point = null;
+  #handleSubmitForm = null;
+  #handleRollupButtonClick = null;
 
-  constructor ({point}) {
+  constructor ({point, handleSubmitForm, handleRollupButtonClick}) {
     super();
     this.#point = point;
+    this.#handleSubmitForm = handleSubmitForm;
+    this.#handleRollupButtonClick = handleRollupButtonClick;
+
+    this.element.querySelector('form').addEventListener('submit', this.#submitFormHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupButtonClickHandler);
   }
 
   get template() {
     return createTemplate(this.#point);
   }
+
+  #submitFormHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleSubmitForm();
+  };
+
+  #rollupButtonClickHandler = () => {
+    this.#handleRollupButtonClick();
+  };
 }
