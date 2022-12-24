@@ -1,4 +1,4 @@
-import { render, RenderPosition } from '../framework/render.js';
+import { RenderPosition, render, replace } from '../framework/render.js';
 import { getOffersByPointType } from '../utils/common.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
@@ -81,9 +81,13 @@ export default class BoardPresenter {
       }
     });
 
-    function replacePointToForm() {this.#tripEventsList.element.replaceChild(newEditPoint.element, newPoint.element);}
+    function replacePointToForm() {
+      replace(newEditPoint, newPoint);
+    }
 
-    function replaceFormToPoint() {this.#tripEventsList.element.replaceChild(newPoint.element, newEditPoint.element);}
+    function replaceFormToPoint() {
+      replace(newPoint, newEditPoint);
+    }
 
     render(newPoint, this.#tripEventsList.element);
   }
