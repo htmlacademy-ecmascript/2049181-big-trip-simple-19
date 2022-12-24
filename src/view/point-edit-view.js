@@ -4,7 +4,7 @@ import {
   capitalize,
   humanizeMinutes,
   humanizeEditDate
-} from '../utils.js';
+} from '../utils/common.js';
 
 const BLANK_POINT = {
   basePrice: '',

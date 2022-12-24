@@ -1,5 +1,5 @@
 import { render, RenderPosition } from '../framework/render.js';
-import { getOffersByPointType } from '../utils.js';
+import { getOffersByPointType } from '../utils/common.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import PointEditView from '../view/point-edit-view.js';
