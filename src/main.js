@@ -18,5 +18,5 @@ const boardPresenter = new BoardPresenter({
   offersModel
 });
 
-render(new FilterView(), siteFiltersContainerElement);
+render(new FilterView(pointsModel.points), siteFiltersContainerElement);
 boardPresenter.init();
