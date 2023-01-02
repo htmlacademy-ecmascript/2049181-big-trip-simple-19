@@ -1,10 +1,9 @@
-import { RenderPosition, render, replace } from '../framework/render.js';
+import { RenderPosition, render } from '../framework/render.js';
 import { getOffersByPointType } from '../utils/common.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
-import PointEditView from '../view/point-edit-view.js';
-import PointView from '../view/point-view.js';
 import SortView from '../view/sort-view.js';
+import PointPresenter from './point-presenter.js';
 
 export default class BoardPresenter {
   #destinationsModel = null;
@@ -37,15 +36,6 @@ export default class BoardPresenter {
   }
 
   #renderPoint(point) {
-
-    const escKeydownHandler = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        replaceFormToPoint.call(this);
-        document.removeEventListener('keydown', escKeydownHandler);
-      }
-    };
-
     const pointData = {
       point: {
         ...point,
@@ -54,37 +44,21 @@ export default class BoardPresenter {
       }
     };
 
-    const newPoint = new PointView({...pointData,
-      handleExpandButtonClick: () => {
-        replacePointToForm.call(this);
-        document.addEventListener('keydown', escKeydownHandler);
-      }
+    const pointPresenter = new PointPresenter({
+      pointsListContainer: this.#tripEventsList.element
     });
 
-    const newEditPoint = new PointEditView({... pointData,
-      handleSubmitForm: () => {
-        replaceFormToPoint.call(this);
-      },
-      handleRollupButtonClick: () => {
-        replaceFormToPoint.call(this);
-        document.removeEventListener('keydown', escKeydownHandler);
-      }
-    });
-
-    function replacePointToForm() {
-      replace(newEditPoint, newPoint);
-    }
-
-    function replaceFormToPoint() {
-      replace(newPoint, newEditPoint);
-    }
-
-    render(newPoint, this.#tripEventsList.element);
+    pointPresenter.init(pointData);
   }
 
   #renderBoard() {
+    if (this.#points.length < 1) {
+      this.#renderNoPoints();
+      return;
+    }
+
     this.#renderSort();
-    this.#renderPoints();
+    this.#renderPointsList();
   }
 
   #renderNoPoints() {
@@ -95,12 +69,7 @@ export default class BoardPresenter {
     render(new SortView(), this.#boardContainer.firstElementChild, RenderPosition.AFTEREND);
   }
 
-  #renderPoints() {
-    if (this.#points.length < 1) {
-      this.#renderNoPoints();
-      return;
-    }
-
+  #renderPointsList() {
     render(this.#tripEventsList, this.#boardContainer);
 
     for (let i = 0; i < this.#points.length; i++) {
@@ -110,5 +79,3 @@ export default class BoardPresenter {
   }
 
 }
-
-
