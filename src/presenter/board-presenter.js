@@ -33,17 +33,7 @@ export default class BoardPresenter {
     this.#destinations = [...this.#destinationsModel.destinations];
     this.#offers = [...this.#offersModel.offers];
 
-    if (this.#points.length < 1) {
-      render(new ListEmptyView(), this.#boardContainer);
-      return;
-    }
-
-    render(new SortView(), this.#boardContainer.firstElementChild, RenderPosition.AFTEREND);
-    render(this.#tripEventsList, this.#boardContainer);
-
-    for (let i = 0; i < this.#points.length; i++) {
-      this.#renderPoint(this.#points[i]);
-    }
+    this.#renderBoard();
   }
 
   #renderPoint(point) {
@@ -90,6 +80,33 @@ export default class BoardPresenter {
     }
 
     render(newPoint, this.#tripEventsList.element);
+  }
+
+  #renderBoard() {
+    this.#renderSort();
+    this.#renderPoints();
+  }
+
+  #renderNoPoints() {
+    render(new ListEmptyView(), this.#boardContainer);
+  }
+
+  #renderSort() {
+    render(new SortView(), this.#boardContainer.firstElementChild, RenderPosition.AFTEREND);
+  }
+
+  #renderPoints() {
+    if (this.#points.length < 1) {
+      this.#renderNoPoints();
+      return;
+    }
+
+    render(this.#tripEventsList, this.#boardContainer);
+
+    for (let i = 0; i < this.#points.length; i++) {
+      this.#renderPoint(this.#points[i]);
+    }
+
   }
 
 }
