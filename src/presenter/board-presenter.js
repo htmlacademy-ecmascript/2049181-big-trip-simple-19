@@ -1,5 +1,5 @@
 import { RenderPosition, render } from '../framework/render.js';
-import { getOffersByPointType } from '../utils/common.js';
+import { getOffersByPointType, updateItem } from '../utils/common.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import SortView from '../view/sort-view.js';
@@ -82,5 +82,10 @@ export default class BoardPresenter {
   #clearPointsList() {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
+  }
+
+  #handlePointChange(updatedPoint) {
+    this.#points = updateItem(this.#points, updatedPoint);
+    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
   }
 }
