@@ -6,14 +6,15 @@ import SortView from '../view/sort-view.js';
 import PointPresenter from './point-presenter.js';
 
 export default class BoardPresenter {
-  #destinationsModel = null;
   #boardContainer = null;
   #pointsModel = null;
+  #destinationsModel = null;
   #offersModel = null;
   #points = [];
   #destinations = [];
   #offers = [];
   #tripEventsList = new TripEventsListView();
+  #pointPresenters = new Map ();
 
   constructor({
     boardContainer,
@@ -49,6 +50,7 @@ export default class BoardPresenter {
     });
 
     pointPresenter.init(pointData);
+    this.#pointPresenters.set(pointData.point.id, pointPresenter);
   }
 
   #renderBoard() {
@@ -75,7 +77,10 @@ export default class BoardPresenter {
     for (let i = 0; i < this.#points.length; i++) {
       this.#renderPoint(this.#points[i]);
     }
-
   }
 
+  #clearPointsList() {
+    this.#pointPresenters.forEach((presenter) => presenter.destroy());
+    this.#pointPresenters.clear();
+  }
 }

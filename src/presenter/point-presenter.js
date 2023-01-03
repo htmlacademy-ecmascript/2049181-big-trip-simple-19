@@ -2,7 +2,6 @@ import { remove, render, replace } from '../framework/render.js';
 import PointEditView from '../view/point-edit-view.js';
 import PointView from '../view/point-view.js';
 
-
 export default class PointPresenter {
   #pointsListContainer = null;
   #point = null;
@@ -14,7 +13,6 @@ export default class PointPresenter {
   }
 
   init(point) {
-
     this.#point = point;
 
     const prevPoint = this.#newPoint;
