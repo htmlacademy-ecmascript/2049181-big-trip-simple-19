@@ -4,12 +4,14 @@ import PointView from '../view/point-view.js';
 
 export default class PointPresenter {
   #pointsListContainer = null;
+  #handleDataChange = null;
   #point = null;
   #newPoint = null;
   #newEditPoint = null;
 
-  constructor({pointsListContainer}) {
+  constructor({pointsListContainer, onDataChange}) {
     this.#pointsListContainer = pointsListContainer;
+    this.#handleDataChange = onDataChange;
   }
 
   init(point) {
@@ -18,12 +20,14 @@ export default class PointPresenter {
     const prevPoint = this.#newPoint;
     const prevEditPoint = this.#newEditPoint;
 
-    this.#newPoint = new PointView({...this.#point,
+    this.#newPoint = new PointView({
+      point: this.#point,
       handleExpandButtonClick: this.#handleOpenForm
     });
 
-    this.#newEditPoint = new PointEditView({... this.#point,
-      handleSubmitForm: this.#handleCloseForm,
+    this.#newEditPoint = new PointEditView({
+      point: this.#point,
+      handleSubmitForm: this.#handleSubmitForm,
       handleRollupButtonClick: this.#handleCloseForm
     });
 
@@ -58,6 +62,12 @@ export default class PointPresenter {
   }
 
   #handleCloseForm = () => {
+    this.#replaceFormToPoint();
+    document.removeEventListener('keydown', this.#escKeydownHandler);
+  };
+
+  #handleSubmitForm = (point) => {
+    this.#handleDataChange(point);
     this.#replaceFormToPoint();
     document.removeEventListener('keydown', this.#escKeydownHandler);
   };
