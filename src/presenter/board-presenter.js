@@ -69,7 +69,9 @@ export default class BoardPresenter {
   }
 
   #renderSort() {
-    render(new SortView(), this.#boardContainer.firstElementChild, RenderPosition.AFTEREND);
+    render(new SortView({
+      onSortChange: this.#handleSortChange
+    }), this.#boardContainer.firstElementChild, RenderPosition.AFTEREND);
   }
 
   #renderPointsList() {
@@ -92,5 +94,9 @@ export default class BoardPresenter {
 
   #handleModeChange = () => {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
+  };
+
+  #handleSortChange = (sortType) => {
+    console.log(sortType);
   };
 }
