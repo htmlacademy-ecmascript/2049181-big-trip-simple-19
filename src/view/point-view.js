@@ -75,7 +75,7 @@ export default class PointView extends AbstractView {
   #point = null;
   #handleExpandButtonClick = null;
 
-  constructor ({point, handleExpandButtonClick: handleExpandButtonClick}) {
+  constructor ({ point, handleExpandButtonClick}) {
     super();
     this.#point = point;
     this.#handleExpandButtonClick = handleExpandButtonClick;
