@@ -4,7 +4,7 @@ import {
   humanizeDate,
   humanizeMinutes,
   humanizeTopicDate
-} from '../utils/common.js';
+} from '../utils/point.js';
 
 const NO_OFFERS_TEMPLATE = (
   `<li class="event__offer">
