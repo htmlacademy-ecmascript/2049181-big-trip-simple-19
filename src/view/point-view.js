@@ -39,7 +39,7 @@ const createOffersTemplate = (allOffers, selectedOffers) => {
 };
 
 const createTemplate = (point) => {
-  const {basePrice, dateFrom, dateTo, destination, type, offers, allOffers} = point;
+  const {basePrice, dateFrom, dateTo, destinationData, type, offers, allOffers} = point;
 
   return (
     `<li class="trip-events__item">
@@ -48,7 +48,7 @@ const createTemplate = (point) => {
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
       </div>
-      <h3 class="event__title">${capitalize(type)} ${destination.name}</h3>
+      <h3 class="event__title">${capitalize(type)} ${destinationData.name}</h3>
       <div class="event__schedule">
         <p class="event__time">
           <time class="event__start-time" datetime="${humanizeDate(dateFrom)}T${humanizeMinutes(dateFrom)}">${humanizeMinutes(dateFrom)}</time>
@@ -74,12 +74,26 @@ const createTemplate = (point) => {
 export default class PointView extends AbstractView {
   #point = null;
   #handleExpandButtonClick = null;
+  #getDestinationById = null;
+  #getOffersByPointType = null;
 
-  constructor ({ point, handleExpandButtonClick}) {
+  constructor ({
+    point,
+    handleExpandButtonClick,
+    getDestinationById,
+    getOffersByPointType
+  }) {
     super();
-    this.#point = point;
-    this.#handleExpandButtonClick = handleExpandButtonClick;
 
+    this.#handleExpandButtonClick = handleExpandButtonClick;
+    this.#getDestinationById = getDestinationById;
+    this.#getOffersByPointType = getOffersByPointType;
+
+    this.#point = {
+      ...point,
+      destinationData: this.#getDestinationById(point),
+      allOffers: this.#getOffersByPointType(point)
+    };
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#expandButtonClickHandler);
   }
 

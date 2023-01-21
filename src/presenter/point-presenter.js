@@ -15,11 +15,21 @@ export default class PointPresenter {
   #newPoint = null;
   #newEditPoint = null;
   #mode = Mode.DEFAULT;
+  #getDestinationById = null;
+  #getOffersByPointType = null;
 
-  constructor({pointsListContainer, onDataChange, onModeChange}) {
+  constructor({
+    pointsListContainer,
+    onDataChange,
+    onModeChange,
+    getDestinationById,
+    getOffersByPointType
+  }) {
     this.#pointsListContainer = pointsListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
+    this.#getDestinationById = getDestinationById;
+    this.#getOffersByPointType = getOffersByPointType;
   }
 
   init(point) {
@@ -30,13 +40,17 @@ export default class PointPresenter {
 
     this.#newPoint = new PointView({
       point: this.#point,
-      handleExpandButtonClick: this.#handleOpenForm
+      handleExpandButtonClick: this.#handleOpenForm,
+      getDestinationById: this.#getDestinationById,
+      getOffersByPointType: this.#getOffersByPointType
     });
 
     this.#newEditPoint = new PointEditView({
       point: this.#point,
       handleSubmitForm: this.#handleSubmitForm,
-      handleRollupButtonClick: this.#handleCloseForm
+      handleRollupButtonClick: this.#handleCloseForm,
+      getDestinationById: this.#getDestinationById,
+      getOffersByPointType: this.#getOffersByPointType
     });
 
     if (prevPoint === null || prevEditPoint === null) {

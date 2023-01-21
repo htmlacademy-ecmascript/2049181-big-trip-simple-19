@@ -42,21 +42,16 @@ export default class BoardPresenter {
   }
 
   #renderPoint(point) {
-    const pointData = {
-      ...point,
-      destination: this.#destinations.find((item) => item.id === point.destination),
-      allOffers: getOffersByPointType(point.type, this.#offers)
-
-    };
-
     const pointPresenter = new PointPresenter({
       pointsListContainer: this.#tripEventsList.element,
       onDataChange: this.#handlePointChange,
-      onModeChange: this.#handleModeChange
+      onModeChange: this.#handleModeChange,
+      getDestinationById: this.#getDestinationById,
+      getOffersByPointType: this.#getOffersByPointType
     });
 
-    pointPresenter.init(pointData);
-    this.#pointPresenters.set(pointData.id, pointPresenter);
+    pointPresenter.init(point);
+    this.#pointPresenters.set(point.id, pointPresenter);
   }
 
   #renderBoard() {
@@ -123,4 +118,9 @@ export default class BoardPresenter {
     this.#clearPointsList();
     this.#renderPointsList();
   };
+
+  #getDestinationById = (point) => this.#destinations.find((item) => item.id === point.destination);
+
+  #getOffersByPointType = (point) => getOffersByPointType(point.type, this.#offers);
+
 }

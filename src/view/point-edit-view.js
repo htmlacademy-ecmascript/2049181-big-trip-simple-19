@@ -1,5 +1,5 @@
 import { TYPES } from '../const.js';
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {
   capitalize,
   humanizeMinutes,
@@ -64,8 +64,7 @@ const createOffersTemplate = (selectedOffers, allOffers) => {
 };
 
 const createTemplate = (point) => {
-  const {basePrice, dateFrom, dateTo, destination, type, offers, allOffers} = point;
-
+  const {basePrice, dateFrom, dateTo, destinationData, type, offers, allOffers} = point;
   const handleResetButtonName = (price) => price > 0
     ? 'Delete'
     : 'Cancel';
@@ -95,7 +94,7 @@ const createTemplate = (point) => {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${capitalize(type)}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination?.name || ''}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationData?.name || ''}" list="destination-list-1">
           <datalist id="destination-list-1">
             <option value="Amsterdam"></option>
             <option value="Geneva"></option>
@@ -136,7 +135,7 @@ const createTemplate = (point) => {
 
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${destination?.description || ''}</p>
+          <p class="event__destination-description">${destinationData?.description || ''}</p>
         </section>
       </section>
     </form>
@@ -144,31 +143,52 @@ const createTemplate = (point) => {
   );
 };
 
-export default class PointEditView extends AbstractView {
-  #point = null;
+export default class PointEditView extends AbstractStatefulView {
   #handleSubmitForm = null;
   #handleRollupButtonClick = null;
+  #getDestinationById = null;
+  #getOffersByPointType = null;
 
-  constructor ({point = BLANK_POINT, handleSubmitForm, handleRollupButtonClick} = {}) {
+  constructor ({
+    point = BLANK_POINT,
+    handleSubmitForm,
+    handleRollupButtonClick,
+    getDestinationById,
+    getOffersByPointType
+  } = {}) {
     super();
-    this.#point = point;
+
+
     this.#handleSubmitForm = handleSubmitForm;
     this.#handleRollupButtonClick = handleRollupButtonClick;
+    this.#getDestinationById = getDestinationById;
+    this.#getOffersByPointType = getOffersByPointType;
+    this._setState(PointEditView.parsePointToState(point, this.#getDestinationById, this.#getOffersByPointType));
+
 
     this.element.querySelector('form').addEventListener('submit', this.#submitFormHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupButtonClickHandler);
   }
 
   get template() {
-    return createTemplate(this.#point);
+    return createTemplate(this._state);
   }
 
   #submitFormHandler = (evt) => {
     evt.preventDefault();
-    this.#handleSubmitForm(this.#point);
+    this.#handleSubmitForm(this._state);
   };
 
   #rollupButtonClickHandler = () => {
     this.#handleRollupButtonClick();
   };
+
+  static parsePointToState(point, getDestination, getOffers) {
+    return {
+      ...point,
+      destinationData: getDestination(point),
+      allOffers: getOffers(point)
+    };
+  }
+
 }
