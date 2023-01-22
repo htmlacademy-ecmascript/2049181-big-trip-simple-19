@@ -74,25 +74,25 @@ const createTemplate = (point) => {
 export default class PointView extends AbstractView {
   #point = null;
   #handleExpandButtonClick = null;
-  #getDestinationById = null;
+  #allDestinations = null;
   #getOffersByPointType = null;
 
   constructor ({
     point,
     handleExpandButtonClick,
-    getDestinationById,
+    allDestinations,
     getOffersByPointType
   }) {
     super();
 
     this.#handleExpandButtonClick = handleExpandButtonClick;
-    this.#getDestinationById = getDestinationById;
+    this.#allDestinations = allDestinations;
     this.#getOffersByPointType = getOffersByPointType;
 
     this.#point = {
       ...point,
       destinationData: this.#getDestinationById(point),
-      allOffers: this.#getOffersByPointType(point)
+      allOffers: this.#getOffersByPointType(point.type)
     };
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#expandButtonClickHandler);
   }
@@ -100,6 +100,8 @@ export default class PointView extends AbstractView {
   get template() {
     return createTemplate(this.#point);
   }
+
+  #getDestinationById = (point) => this.#allDestinations.find((item) => item.id === point.destination);
 
   #expandButtonClickHandler = (evt) => {
     (evt).preventDefault();

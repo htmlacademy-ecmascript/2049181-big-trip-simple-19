@@ -16,6 +16,7 @@ export default class PointPresenter {
   #newEditPoint = null;
   #mode = Mode.DEFAULT;
   #getDestinationById = null;
+  #allDestinations = [];
   #getOffersByPointType = null;
 
   constructor({
@@ -23,12 +24,14 @@ export default class PointPresenter {
     onDataChange,
     onModeChange,
     getDestinationById,
+    allDestinations,
     getOffersByPointType
   }) {
     this.#pointsListContainer = pointsListContainer;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
     this.#getDestinationById = getDestinationById;
+    this.#allDestinations = allDestinations;
     this.#getOffersByPointType = getOffersByPointType;
   }
 
@@ -41,7 +44,7 @@ export default class PointPresenter {
     this.#newPoint = new PointView({
       point: this.#point,
       handleExpandButtonClick: this.#handleOpenForm,
-      getDestinationById: this.#getDestinationById,
+      allDestinations: this.#allDestinations,
       getOffersByPointType: this.#getOffersByPointType
     });
 
@@ -49,7 +52,7 @@ export default class PointPresenter {
       point: this.#point,
       handleSubmitForm: this.#handleSubmitForm,
       handleRollupButtonClick: this.#handleCloseForm,
-      getDestinationById: this.#getDestinationById,
+      allDestinations: this.#allDestinations,
       getOffersByPointType: this.#getOffersByPointType
     });
 
@@ -95,7 +98,12 @@ export default class PointPresenter {
     document.removeEventListener('keydown', this.#escKeydownHandler);
   }
 
+  #resetEditFormState() {
+    this.#newEditPoint.resetState(this.#point);
+  }
+
   #handleCloseForm = () => {
+    this.#resetEditFormState();
     this.#replaceFormToPoint();
   };
 
