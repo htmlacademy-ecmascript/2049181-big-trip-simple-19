@@ -177,7 +177,7 @@ export default class PointEditView extends AbstractStatefulView {
     return createTemplate(this._state);
   }
 
-  resetState(task) {
+  reset(task) {
     this.updateElement(task);
   }
 
