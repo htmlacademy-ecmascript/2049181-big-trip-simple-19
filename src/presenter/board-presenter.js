@@ -37,26 +37,20 @@ export default class BoardPresenter {
     this.#sourcedPoints = [...this.#pointsModel.points].sort(sortByDay);
     this.#destinations = [...this.#destinationsModel.destinations];
     this.#offers = [...this.#offersModel.offers];
-
     this.#renderBoard();
   }
 
   #renderPoint(point) {
-    const pointData = {
-      ...point,
-      destination: this.#destinations.find((item) => item.id === point.destination),
-      allOffers: getOffersByPointType(point.type, this.#offers)
-
-    };
-
     const pointPresenter = new PointPresenter({
       pointsListContainer: this.#tripEventsList.element,
       onDataChange: this.#handlePointChange,
-      onModeChange: this.#handleModeChange
+      onModeChange: this.#handleModeChange,
+      allDestinations: this.#getDestinationsList(),
+      getOffersByPointType: this.#getOffersByPointType
     });
 
-    pointPresenter.init(pointData);
-    this.#pointPresenters.set(pointData.id, pointPresenter);
+    pointPresenter.init(point);
+    this.#pointPresenters.set(point.id, pointPresenter);
   }
 
   #renderBoard() {
@@ -104,6 +98,10 @@ export default class BoardPresenter {
     this.#currentSort = sortType;
   }
 
+  #getDestinationsList = () => this.#destinations;
+
+  #getOffersByPointType = (pointType) => getOffersByPointType(pointType, this.#offers);
+
   #handlePointChange = (updatedPoint) => {
     this.#points = updateItem(this.#points, updatedPoint);
     this.#sourcedPoints = updateItem(this.#sourcedPoints, updatedPoint);
@@ -123,4 +121,5 @@ export default class BoardPresenter {
     this.#clearPointsList();
     this.#renderPointsList();
   };
+
 }

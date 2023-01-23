@@ -1,5 +1,5 @@
 import { TYPES } from '../const.js';
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {
   capitalize,
   humanizeMinutes,
@@ -36,6 +36,15 @@ const createEventTypeItemsTemplate = (allTypes, pointType) => {
   return templates.join('\r\n\r\n');
 };
 
+const createDestinationCityTemplate = (city) => `<option value="${city.name}"></option>`;
+
+const createDestinationCitiesTemplate = (allCities) => {
+  const templates = [];
+  allCities.forEach((city) => templates.push(createDestinationCityTemplate(city)));
+
+  return templates.join('\r\n\r\n');
+};
+
 const getOfferName = (offer) => offer.title.split(' ').pop();
 
 const createOfferTemplate = (offer, selectedOffers) => {
@@ -64,8 +73,7 @@ const createOffersTemplate = (selectedOffers, allOffers) => {
 };
 
 const createTemplate = (point) => {
-  const {basePrice, dateFrom, dateTo, destination, type, offers, allOffers} = point;
-
+  const {basePrice, dateFrom, dateTo, destinationData, type, offers, allOffers, allDestinations} = point;
   const handleResetButtonName = (price) => price > 0
     ? 'Delete'
     : 'Cancel';
@@ -95,11 +103,9 @@ const createTemplate = (point) => {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${capitalize(type)}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination?.name || ''}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationData?.name || ''}" list="destination-list-1">
           <datalist id="destination-list-1">
-            <option value="Amsterdam"></option>
-            <option value="Geneva"></option>
-            <option value="Chamonix"></option>
+            ${createDestinationCitiesTemplate(allDestinations)}
           </datalist>
         </div>
 
@@ -136,7 +142,7 @@ const createTemplate = (point) => {
 
         <section class="event__section  event__section--destination">
           <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-          <p class="event__destination-description">${destination?.description || ''}</p>
+          <p class="event__destination-description">${destinationData?.description || ''}</p>
         </section>
       </section>
     </form>
@@ -144,31 +150,79 @@ const createTemplate = (point) => {
   );
 };
 
-export default class PointEditView extends AbstractView {
-  #point = null;
+export default class PointEditView extends AbstractStatefulView {
   #handleSubmitForm = null;
   #handleRollupButtonClick = null;
+  #allDestinations = [];
+  #getOffersByPointType = null;
 
-  constructor ({point = BLANK_POINT, handleSubmitForm, handleRollupButtonClick} = {}) {
+  constructor ({
+    point = BLANK_POINT,
+    handleSubmitForm,
+    handleRollupButtonClick,
+    allDestinations,
+    getOffersByPointType
+  } = {}) {
     super();
-    this.#point = point;
+
     this.#handleSubmitForm = handleSubmitForm;
     this.#handleRollupButtonClick = handleRollupButtonClick;
-
-    this.element.querySelector('form').addEventListener('submit', this.#submitFormHandler);
-    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupButtonClickHandler);
+    this.#allDestinations = allDestinations;
+    this.#getOffersByPointType = getOffersByPointType;
+    this._setState(PointEditView.parsePointToState(point, this.#getDestinationById, this.#getOffersByPointType, this.#allDestinations));
+    this._restoreHandlers();
   }
 
   get template() {
-    return createTemplate(this.#point);
+    return createTemplate(this._state);
   }
+
+  resetState(task) {
+    this.updateElement(task);
+  }
+
+  _restoreHandlers() {
+    this.element.querySelector('form').addEventListener('submit', this.#submitFormHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupButtonClickHandler);
+    this.element.querySelector('.event__type-group').addEventListener('click', this.#typeButtonClickHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationDatalistClickHandler);
+  }
+
+  #getDestinationById = (point) => this.#allDestinations.find((item) => item.id === point.destination);
 
   #submitFormHandler = (evt) => {
     evt.preventDefault();
-    this.#handleSubmitForm(this.#point);
+    this.#handleSubmitForm(this._state);
   };
 
   #rollupButtonClickHandler = () => {
     this.#handleRollupButtonClick();
   };
+
+  #typeButtonClickHandler = (evt) => {
+    const pointType = evt.target.innerText.toLowerCase();
+    this.updateElement({
+      type: pointType,
+      allOffers: this.#getOffersByPointType(pointType),
+      offers: []
+    });
+  };
+
+  #destinationDatalistClickHandler = (evt) => {
+    const newDestinationData = this.#allDestinations.find((item) => item.name === evt.srcElement.value);
+    this.updateElement({
+      destinationData: newDestinationData,
+      destination: newDestinationData.id
+    });
+  };
+
+  static parsePointToState(point, getDestination, getOffers, allDestinations) {
+    return {
+      ...point,
+      destinationData: getDestination(point),
+      allOffers: getOffers(point.type),
+      allDestinations: allDestinations
+    };
+  }
+
 }
