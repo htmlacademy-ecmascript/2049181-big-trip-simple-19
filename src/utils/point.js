@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 
 const DATE_TOPIC_FORMAT = 'D MMM';
 const DATE_FORMAT = 'YYYY-MM-DD';
-const MINUTES_FORMAT = 'HH:MM';
+const MINUTES_FORMAT = 'HH:mm';
 const DATE_EDIT_FORMAT = 'DD/MM/YY';
 
 const humanizeTopicDate = (date) => date
