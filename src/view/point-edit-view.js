@@ -5,6 +5,9 @@ import {
   humanizeMinutes,
   humanizeEditDate
 } from '../utils/point.js';
+import flatpickr from 'flatpickr';
+
+import 'flatpickr/dist/flatpickr.min.css';
 
 const BLANK_POINT = {
   basePrice: '',
@@ -155,6 +158,8 @@ export default class PointEditView extends AbstractStatefulView {
   #handleRollupButtonClick = null;
   #allDestinations = [];
   #getOffersByPointType = null;
+  #startTimeDatepicker = null;
+  #endTimeDatepicker = null;
 
   constructor ({
     point = BLANK_POINT,
@@ -177,7 +182,21 @@ export default class PointEditView extends AbstractStatefulView {
     return createTemplate(this._state);
   }
 
-  resetState(task) {
+  setDatepickers() {
+    this.#setStartTimeDatepicker();
+    this.#setEndTimeDatepicker();
+  }
+
+  destroyDatepickers() {
+    if (this.#startTimeDatepicker && this.#endTimeDatepicker) {
+      this.#startTimeDatepicker.destroy();
+      this.#startTimeDatepicker = null;
+      this.#endTimeDatepicker.destroy();
+      this.#endTimeDatepicker = null;
+    }
+  }
+
+  reset(task) {
     this.updateElement(task);
   }
 
@@ -189,6 +208,45 @@ export default class PointEditView extends AbstractStatefulView {
   }
 
   #getDestinationById = (point) => this.#allDestinations.find((item) => item.id === point.destination);
+
+  #setStartTimeDatepicker() {
+    this.#startTimeDatepicker = flatpickr(
+      this.element.querySelector('[name = "event-start-time"]'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        'time_24hr': true,
+        defaultDate: this._state.dateFrom,
+        onChange: this.#startTimeChangeHandler
+      }
+    );
+  }
+
+  #setEndTimeDatepicker() {
+    this.#endTimeDatepicker = flatpickr(
+      this.element.querySelector('[name = "event-end-time"]'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        'time_24hr': true,
+        minDate: this._state.dateFrom,
+        defaultDate: this._state.dateTo,
+        onChange: this.#endTimeChangeHandler
+      }
+    );
+  }
+
+  #startTimeChangeHandler = ([time]) => {
+    this.updateElement({
+      dateFrom: time
+    });
+  };
+
+  #endTimeChangeHandler = ([time]) => {
+    this.updateElement({
+      dateTo: time
+    });
+  };
 
   #submitFormHandler = (evt) => {
     evt.preventDefault();
