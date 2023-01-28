@@ -10,4 +10,10 @@ const SortType = {
   PRICE: 'price'
 };
 
-export { TYPES, FilterType, SortType };
+const UpdateAction = {
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT',
+  DELETE_POINT: 'DELETE_POINT'
+};
+
+export { TYPES, FilterType, SortType, UpdateAction };

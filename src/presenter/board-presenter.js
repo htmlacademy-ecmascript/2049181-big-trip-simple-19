@@ -1,18 +1,19 @@
-import { RenderPosition, render } from '../framework/render.js';
-import { getOffersByPointType } from '../utils/common.js';
-import { sortByDay, sortByPrice } from '../utils/point.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import SortView from '../view/sort-view.js';
 import PointPresenter from './point-presenter.js';
+import { RenderPosition, render } from '../framework/render.js';
 import { SortType } from '../const.js';
+import {
+  sortByDay,
+  sortByPrice,
+  getOffersByPointType
+} from '../utils/point.js';
 
 export default class BoardPresenter {
   #currentSortType = SortType.DAY;
   #boardContainer = null;
-  #pointsModel = null;
-  #destinationsModel = null;
-  #offersModel = null;
+  #dataModel = null;
   #destinations = [];
   #offers = [];
   #tripEventsList = new TripEventsListView();
@@ -20,36 +21,34 @@ export default class BoardPresenter {
 
   constructor({
     boardContainer,
-    pointsModel,
-    destinationsModel,
-    offersModel
+    dataModel
   }) {
     this.#boardContainer = boardContainer;
-    this.#pointsModel = pointsModel;
-    this.#destinationsModel = destinationsModel;
-    this.#offersModel = offersModel;
+    this.#dataModel = dataModel;
+
+    this.#dataModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
     switch (this.#currentSortType) {
       case SortType.DAY:
-        return [...this.#pointsModel.points].sort(sortByDay);
+        return [...this.#dataModel.points].sort(sortByDay);
       case SortType.PRICE:
-        return [...this.#pointsModel.points].sort(sortByPrice);
+        return [...this.#dataModel.points].sort(sortByPrice);
     }
-    return this.#pointsModel.points;
+    return this.#dataModel.points;
   }
 
   init() {
-    this.#destinations = [...this.#destinationsModel.destinations];
-    this.#offers = [...this.#offersModel.offers];
+    this.#destinations = [...this.#dataModel.destinations];
+    this.#offers = [...this.#dataModel.offers];
     this.#renderBoard();
   }
 
   #renderPoint(point) {
     const pointPresenter = new PointPresenter({
       pointsListContainer: this.#tripEventsList.element,
-      onDataChange: this.#handlePointChange,
+      onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange,
       allDestinations: this.#destinations,
       getOffersByPointType: this.#getOffersByPointType
@@ -91,9 +90,12 @@ export default class BoardPresenter {
 
   #getOffersByPointType = (pointType) => getOffersByPointType(pointType, this.#offers);
 
-  #handlePointChange = (updatedPoint) => {
-    //Здесь будем вызывать обновление модели
-    this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
+  #handleViewAction = (actionType, update) => {
+    console.log(actionType, update);
+  };
+
+  #handleModelEvent = (updateType, data) => {
+    console.log(updateType, data);
   };
 
   #handleModeChange = () => {
