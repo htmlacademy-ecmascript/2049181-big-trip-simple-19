@@ -1,5 +1,5 @@
 import { RenderPosition, render } from '../framework/render.js';
-import { getOffersByPointType, updateItem } from '../utils/common.js';
+import { getOffersByPointType } from '../utils/common.js';
 import { sortByDay, sortByPrice } from '../utils/point.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
@@ -8,13 +8,11 @@ import PointPresenter from './point-presenter.js';
 import { SortType } from '../const.js';
 
 export default class BoardPresenter {
-  #currentSort = SortType.DAY;
+  #currentSortType = SortType.DAY;
   #boardContainer = null;
   #pointsModel = null;
   #destinationsModel = null;
   #offersModel = null;
-  #points = [];
-  #sourcedPoints = [];
   #destinations = [];
   #offers = [];
   #tripEventsList = new TripEventsListView();
@@ -32,9 +30,17 @@ export default class BoardPresenter {
     this.#offersModel = offersModel;
   }
 
+  get points() {
+    switch (this.#currentSortType) {
+      case SortType.DAY:
+        return [...this.#pointsModel.points].sort(sortByDay);
+      case SortType.PRICE:
+        return [...this.#pointsModel.points].sort(sortByPrice);
+    }
+    return this.#pointsModel.points;
+  }
+
   init() {
-    this.#points = [...this.#pointsModel.points].sort(sortByDay);
-    this.#sourcedPoints = [...this.#pointsModel.points].sort(sortByDay);
     this.#destinations = [...this.#destinationsModel.destinations];
     this.#offers = [...this.#offersModel.offers];
     this.#renderBoard();
@@ -45,7 +51,7 @@ export default class BoardPresenter {
       pointsListContainer: this.#tripEventsList.element,
       onDataChange: this.#handlePointChange,
       onModeChange: this.#handleModeChange,
-      allDestinations: this.#getDestinationsList(),
+      allDestinations: this.#destinations,
       getOffersByPointType: this.#getOffersByPointType
     });
 
@@ -54,7 +60,7 @@ export default class BoardPresenter {
   }
 
   #renderBoard() {
-    if (this.#points.length < 1) {
+    if (this.points.length < 1) {
       this.#renderNoPoints();
       return;
     }
@@ -75,10 +81,7 @@ export default class BoardPresenter {
 
   #renderPointsList() {
     render(this.#tripEventsList, this.#boardContainer);
-
-    for (let i = 0; i < this.#points.length; i++) {
-      this.#renderPoint(this.#points[i]);
-    }
+    this.points.forEach((point) => this.#renderPoint(point));
   }
 
   #clearPointsList() {
@@ -86,25 +89,10 @@ export default class BoardPresenter {
     this.#pointPresenters.clear();
   }
 
-  #sortPoints(sortType) {
-    switch (sortType) {
-      case SortType.DAY:
-        this.#points = [...this.#sourcedPoints];
-        break;
-      case SortType.PRICE:
-        this.#points.sort(sortByPrice);
-    }
-
-    this.#currentSort = sortType;
-  }
-
-  #getDestinationsList = () => this.#destinations;
-
   #getOffersByPointType = (pointType) => getOffersByPointType(pointType, this.#offers);
 
   #handlePointChange = (updatedPoint) => {
-    this.#points = updateItem(this.#points, updatedPoint);
-    this.#sourcedPoints = updateItem(this.#sourcedPoints, updatedPoint);
+    //Здесь будем вызывать обновление модели
     this.#pointPresenters.get(updatedPoint.id).init(updatedPoint);
   };
 
@@ -113,11 +101,11 @@ export default class BoardPresenter {
   };
 
   #handleSortChange = (sortType) => {
-    if (this.#currentSort === sortType) {
+    if (this.#currentSortType === sortType) {
       return;
     }
 
-    this.#sortPoints(sortType);
+    this.#currentSortType = sortType;
     this.#clearPointsList();
     this.#renderPointsList();
   };
