@@ -182,12 +182,9 @@ export default class PointEditView extends AbstractStatefulView {
     return createTemplate(this._state);
   }
 
-  setDatepickers() {
-    this.#setStartTimeDatepicker();
-    this.#setEndTimeDatepicker();
-  }
+  removeElement() {
+    super.removeElement();
 
-  destroyDatepickers() {
     if (this.#startTimeDatepicker && this.#endTimeDatepicker) {
       this.#startTimeDatepicker.destroy();
       this.#startTimeDatepicker = null;
@@ -205,6 +202,8 @@ export default class PointEditView extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupButtonClickHandler);
     this.element.querySelector('.event__type-group').addEventListener('click', this.#typeButtonClickHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationDatalistClickHandler);
+    this.#setStartTimeDatepicker();
+    this.#setEndTimeDatepicker();
   }
 
   #getDestinationById = (point) => this.#allDestinations.find((item) => item.id === point.destination);
@@ -217,7 +216,7 @@ export default class PointEditView extends AbstractStatefulView {
         enableTime: true,
         'time_24hr': true,
         defaultDate: this._state.dateFrom,
-        onChange: this.#startTimeChangeHandler
+        onClose: this.#startTimeChangeHandler
       }
     );
   }
@@ -231,7 +230,7 @@ export default class PointEditView extends AbstractStatefulView {
         'time_24hr': true,
         minDate: this._state.dateFrom,
         defaultDate: this._state.dateTo,
-        onChange: this.#endTimeChangeHandler
+        onClose: this.#endTimeChangeHandler
       }
     );
   }

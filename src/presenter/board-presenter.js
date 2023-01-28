@@ -2,7 +2,7 @@ import TripEventsListView from '../view/trip-events-list-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import SortView from '../view/sort-view.js';
 import PointPresenter from './point-presenter.js';
-import { RenderPosition, render } from '../framework/render.js';
+import { RenderPosition, render, remove } from '../framework/render.js';
 import { SortType, UpdateType, UserAction } from '../const.js';
 import {
   sortByDay,
@@ -18,6 +18,8 @@ export default class BoardPresenter {
   #offers = [];
   #tripEventsList = new TripEventsListView();
   #pointPresenters = new Map ();
+  #sortComponent = null;
+  #noPointsComponent = null;
 
   constructor({
     boardContainer,
@@ -58,6 +60,20 @@ export default class BoardPresenter {
     this.#pointPresenters.set(point.id, pointPresenter);
   }
 
+  #renderNoPoints() {
+    this.#noPointsComponent = new ListEmptyView();
+
+    render(this.#noPointsComponent, this.#boardContainer);
+  }
+
+  #renderSort() {
+    this.#sortComponent = new SortView({
+      onSortChange: this.#handleSortChange,
+      currentSortType: this.#currentSortType
+    });
+    render(this.#sortComponent, this.#boardContainer.firstElementChild, RenderPosition.AFTEREND);
+  }
+
   #renderBoard() {
     if (this.points.length < 1) {
       this.#renderNoPoints();
@@ -65,27 +81,20 @@ export default class BoardPresenter {
     }
 
     this.#renderSort();
-    this.#renderPointsList();
-  }
-
-  #renderNoPoints() {
-    render(new ListEmptyView(), this.#boardContainer);
-  }
-
-  #renderSort() {
-    render(new SortView({
-      onSortChange: this.#handleSortChange
-    }), this.#boardContainer.firstElementChild, RenderPosition.AFTEREND);
-  }
-
-  #renderPointsList() {
     render(this.#tripEventsList, this.#boardContainer);
     this.points.forEach((point) => this.#renderPoint(point));
   }
 
-  #clearPointsList() {
+  #clearBoard({resetSortType = false} = {}) {
     this.#pointPresenters.forEach((presenter) => presenter.destroy());
     this.#pointPresenters.clear();
+
+    remove(this.#sortComponent);
+    remove(this.#noPointsComponent);
+
+    if (resetSortType) {
+      this.#currentSortType = SortType.DAY;
+    }
   }
 
   #getOffersByPointType = (pointType) => getOffersByPointType(pointType, this.#offers);
@@ -102,10 +111,6 @@ export default class BoardPresenter {
         this.#dataModel.deletePoint(updateType, update);
         break;
     }
-    // Здесь будем вызывать обновление модели.
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
   };
 
   #handleModelEvent = (updateType, data) => {
@@ -116,9 +121,13 @@ export default class BoardPresenter {
         break;
       case UpdateType.MINOR:
         // - обновить список (например, когда задача ушла в архив)
+        this.#clearBoard();
+        this.#renderBoard();
         break;
       case UpdateType.MAJOR:
         // - обновить всю доску (например, при переключении фильтра)
+        this.#clearBoard({resetSortType: true});
+        this.#renderBoard();
         break;
     }
   };
@@ -133,8 +142,8 @@ export default class BoardPresenter {
     }
 
     this.#currentSortType = sortType;
-    this.#clearPointsList();
-    this.#renderPointsList();
+    this.#clearBoard();
+    this.#renderBoard();
   };
 
 }

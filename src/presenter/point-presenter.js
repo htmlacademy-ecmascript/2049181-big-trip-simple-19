@@ -85,7 +85,6 @@ export default class PointPresenter {
   #replacePointToForm() {
     replace(this.#newEditPoint, this.#newPoint);
     this.#mode = Mode.EDITING;
-    this.#newEditPoint.setDatepickers();
 
     document.addEventListener('keydown', this.#escKeydownHandler);
   }
@@ -94,7 +93,6 @@ export default class PointPresenter {
     replace(this.#newPoint, this.#newEditPoint);
     this.#mode = Mode.DEFAULT;
 
-    this.#newEditPoint.destroyDatepickers();
     document.removeEventListener('keydown', this.#escKeydownHandler);
   }
 
