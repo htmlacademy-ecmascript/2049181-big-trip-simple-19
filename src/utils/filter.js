@@ -1,7 +1,5 @@
-import dayjs from 'dayjs';
+import { isPlannedDate } from './point.js';
 
-const isPointDateInFuture = (point) => !(dayjs().isAfter(point.dateFrom, 'D'));
+const generateFilter = (points) => points.filter((point) => isPlannedDate(point.dateFrom));
 
-const filter = (points) => points.filter((point) => isPointDateInFuture(point));
-
-export { filter };
+export { generateFilter };

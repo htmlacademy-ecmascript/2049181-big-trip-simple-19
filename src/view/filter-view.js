@@ -1,9 +1,8 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { filter } from '../utils/filter.js';
 
-const createTemplate = (points) => {
+const createTemplate = (filters) => {
 
-  const handleDisabledClass = () => filter(points).length > 0
+  const handleDisabledClass = () => filters.length > 0
     ? ''
     : 'disabled';
 
@@ -25,14 +24,14 @@ const createTemplate = (points) => {
 };
 
 export default class FilterView extends AbstractView {
-  #points = null;
+  #filters = null;
 
-  constructor(points) {
+  constructor({filters}) {
     super();
-    this.#points = points;
+    this.#filters = filters;
   }
 
   get template() {
-    return createTemplate(this.#points);
+    return createTemplate(this.#filters);
   }
 }

@@ -26,8 +26,8 @@ const generatePoint = () => {
 
   return ({
     basePrice: getRandomInteger(100, 1500),
-    dateFrom: new Date(2023, 0, day, hour, minute),
-    dateTo: new Date(2023, getRandomInteger(0, 1), day + getRandomInteger(0, 1), hour + getRandomInteger(0, 12, minute + getRandomInteger(0, 30))),
+    dateFrom: new Date(2023, getRandomInteger(0, 1), day, hour, minute),
+    dateTo: new Date(2023, getRandomInteger(1, 2), day + getRandomInteger(0, 1), hour + getRandomInteger(0, 12, minute + getRandomInteger(0, 30))),
     destination: getDestinationId(),
     id: nanoid(),
     offers: getOffersIds(),
