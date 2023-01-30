@@ -155,6 +155,7 @@ const createTemplate = (point) => {
 
 export default class PointEditView extends AbstractStatefulView {
   #handleSubmitForm = null;
+  #handleDeleteClick = null;
   #handleRollupButtonClick = null;
   #allDestinations = [];
   #getOffersByPointType = null;
@@ -164,6 +165,7 @@ export default class PointEditView extends AbstractStatefulView {
   constructor ({
     point = BLANK_POINT,
     handleSubmitForm,
+    handleDeleteClick,
     handleRollupButtonClick,
     allDestinations,
     getOffersByPointType
@@ -171,6 +173,7 @@ export default class PointEditView extends AbstractStatefulView {
     super();
 
     this.#handleSubmitForm = handleSubmitForm;
+    this.#handleDeleteClick = handleDeleteClick;
     this.#handleRollupButtonClick = handleRollupButtonClick;
     this.#allDestinations = allDestinations;
     this.#getOffersByPointType = getOffersByPointType;
@@ -202,6 +205,7 @@ export default class PointEditView extends AbstractStatefulView {
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupButtonClickHandler);
     this.element.querySelector('.event__type-group').addEventListener('click', this.#typeButtonClickHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationDatalistClickHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
     this.#setStartTimeDatepicker();
     this.#setEndTimeDatepicker();
   }
@@ -249,7 +253,11 @@ export default class PointEditView extends AbstractStatefulView {
 
   #submitFormHandler = (evt) => {
     evt.preventDefault();
-    this.#handleSubmitForm(this._state);
+    this.#handleSubmitForm(PointEditView.parseStateToPoint(this._state));
+  };
+
+  #deleteClickHandler = () => {
+    this.#handleDeleteClick(PointEditView.parseStateToPoint(this._state));
   };
 
   #rollupButtonClickHandler = () => {
@@ -280,6 +288,16 @@ export default class PointEditView extends AbstractStatefulView {
       allOffers: getOffers(point.type),
       allDestinations: allDestinations
     };
+  }
+
+  static parseStateToPoint(state) {
+    const point = {...state};
+
+    delete point.destinationData;
+    delete point.allOffers;
+    delete point.allDestinations;
+
+    return point;
   }
 
 }

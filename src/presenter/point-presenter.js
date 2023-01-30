@@ -2,6 +2,7 @@ import { remove, render, replace } from '../framework/render.js';
 import PointEditView from '../view/point-edit-view.js';
 import PointView from '../view/point-view.js';
 import { UserAction, UpdateType } from '../const.js';
+import { isDateEqual } from '../utils/point.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -49,6 +50,7 @@ export default class PointPresenter {
     this.#newEditPoint = new PointEditView({
       point: this.#point,
       handleSubmitForm: this.#handleSubmitForm,
+      handleDeleteClick: this.#handleDeleteClick,
       handleRollupButtonClick: this.#handleCloseForm,
       allDestinations: this.#allDestinations,
       getOffersByPointType: this.#getOffersByPointType
@@ -105,12 +107,21 @@ export default class PointPresenter {
     this.#replaceFormToPoint();
   };
 
-  #handleSubmitForm = (point) => {
+  #handleSubmitForm = (update) => {
+    const isPatch = isDateEqual(this.#point.dateFrom, update.dateFrom);
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
-      UpdateType.MINOR,
-      point);
+      isPatch ? UpdateType.PATCH : UpdateType.MINOR,
+      update);
     this.#replaceFormToPoint();
+  };
+
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point
+    );
   };
 
   #handleOpenForm = () => {
