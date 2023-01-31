@@ -72,7 +72,7 @@ const createOffersTemplate = (selectedOffers, allOffers) => {
 
   allOffers.forEach((item) => resultOffers.push(createOfferTemplate(item, selectedOffers)));
 
-  return resultOffers.sort((item) => item.indexOf('checked')).reverse().join('');
+  return resultOffers.join('');
 };
 
 const createTemplate = (point) => {
@@ -210,6 +210,21 @@ export default class PointEditView extends AbstractStatefulView {
     this.#setEndTimeDatepicker();
   }
 
+  #getCheckedOffersIds = () => {
+    const checkedOffers = [];
+    const allOffers = this.element.querySelectorAll('.event__offer-checkbox:checked');
+    allOffers.forEach(
+      (offer) => checkedOffers.push(
+        Number(
+          offer.id
+            .split('-')
+            .at(-1))
+      )
+    );
+
+    return checkedOffers;
+  };
+
   #getDestinationById = (point) => this.#allDestinations.find((item) => item.id === point.destination);
 
   #setStartTimeDatepicker() {
@@ -241,19 +256,21 @@ export default class PointEditView extends AbstractStatefulView {
 
   #startTimeChangeHandler = ([time]) => {
     this.updateElement({
-      dateFrom: time
+      dateFrom: time,
+      offers: this.#getCheckedOffersIds()
     });
   };
 
   #endTimeChangeHandler = ([time]) => {
     this.updateElement({
-      dateTo: time
+      dateTo: time,
+      offers: this.#getCheckedOffersIds()
     });
   };
 
   #submitFormHandler = (evt) => {
     evt.preventDefault();
-    this.#handleSubmitForm(PointEditView.parseStateToPoint(this._state));
+    this.#handleSubmitForm(PointEditView.parseStateToPoint(this._state, this.#getCheckedOffersIds));
   };
 
   #deleteClickHandler = () => {
@@ -290,8 +307,12 @@ export default class PointEditView extends AbstractStatefulView {
     };
   }
 
-  static parseStateToPoint(state) {
+  static parseStateToPoint(state, getOffers) {
     const point = {...state};
+
+    if (getOffers) {
+      point.offers = getOffers();
+    }
 
     delete point.destinationData;
     delete point.allOffers;
