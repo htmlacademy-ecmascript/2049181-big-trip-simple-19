@@ -1,4 +1,4 @@
-import { TYPES } from '../const.js';
+import {TYPES} from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {
   capitalize,

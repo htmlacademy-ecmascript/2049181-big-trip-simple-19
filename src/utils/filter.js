@@ -1,5 +1,5 @@
-import { isPlannedDate } from './point.js';
+import {isPlannedDate} from './point.js';
 
-const generateFilter = (points) => points.filter((point) => isPlannedDate(point.dateFrom));
+const filter = (points) => points.filter((point) => isPlannedDate(point.dateFrom));
 
-export { generateFilter };
+export {filter};

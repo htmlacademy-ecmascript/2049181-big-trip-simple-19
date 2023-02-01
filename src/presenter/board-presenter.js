@@ -2,8 +2,8 @@ import TripEventsListView from '../view/trip-events-list-view.js';
 import ListEmptyView from '../view/list-empty-view.js';
 import SortView from '../view/sort-view.js';
 import PointPresenter from './point-presenter.js';
-import { RenderPosition, render, remove } from '../framework/render.js';
-import { SortType, UpdateType, UserAction } from '../const.js';
+import {RenderPosition, render, remove} from '../framework/render.js';
+import {SortType, UpdateType, UserAction} from '../const.js';
 import {
   sortByDay,
   sortByPrice,

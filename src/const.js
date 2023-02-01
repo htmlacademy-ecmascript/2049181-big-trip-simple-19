@@ -22,4 +22,4 @@ const UpdateType = {
   MAJOR: 'MAJOR',
 };
 
-export { TYPES, FilterType, SortType, UserAction, UpdateType };
+export {TYPES, FilterType, SortType, UserAction, UpdateType};

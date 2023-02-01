@@ -1,7 +1,7 @@
 import Observable from '../framework/observable.js';
-import { generatePoints } from '../mock/point.js';
-import { offersByType } from '../mock/offer.js';
-import { destinations } from '../mock/destination.js';
+import {generatePoints} from '../mock/point.js';
+import {offersByType} from '../mock/offer.js';
+import {destinations} from '../mock/destination.js';
 
 export default class DataModel extends Observable {
   #points = generatePoints();
