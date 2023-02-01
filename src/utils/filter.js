@@ -1,4 +1,4 @@
-import {isPlannedDate} from './point.js';
+import { isPlannedDate } from './point.js';
 import { FilterType } from '../const.js';
 
 const filter = {
@@ -6,4 +6,4 @@ const filter = {
   [FilterType.FUTURE]: (points) => points.filter((point) => isPlannedDate(point.dateFrom))
 };
 
-export {filter};
+export { filter };

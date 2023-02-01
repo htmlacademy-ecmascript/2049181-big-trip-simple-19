@@ -6,7 +6,7 @@ const NoTaskTextType = {
   [FilterType.FUTURE]: 'There are no future events now'
 };
 
-const createTemplate = (filterType) =>`<p class="trip-events__msg">${NoTaskTextType[filterType]}</p>`;
+const createTemplate = (filterType) => `<p class="trip-events__msg">${NoTaskTextType[filterType]}</p>`;
 
 export default class ListEmptyView extends AbstractView {
   #filterType = null;

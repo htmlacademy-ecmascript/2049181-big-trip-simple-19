@@ -1,8 +1,8 @@
-import {remove, render, replace} from '../framework/render.js';
+import { remove, render, replace } from '../framework/render.js';
 import PointEditView from '../view/point-edit-view.js';
 import PointView from '../view/point-view.js';
-import {UserAction, UpdateType} from '../const.js';
-import {isDateEqual} from '../utils/point.js';
+import { UserAction, UpdateType } from '../const.js';
+import { isDateEqual } from '../utils/point.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -53,7 +53,8 @@ export default class PointPresenter {
       handleDeleteClick: this.#handleDeleteClick,
       handleRollupButtonClick: this.#handleCloseForm,
       allDestinations: this.#allDestinations,
-      getOffersByPointType: this.#getOffersByPointType
+      getOffersByPointType: this.#getOffersByPointType,
+      mode: this.#mode
     });
 
     if (prevPointComponent === null || prevEditPointComponent === null) {

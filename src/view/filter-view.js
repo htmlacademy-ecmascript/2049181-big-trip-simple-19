@@ -5,7 +5,6 @@ const createFilterTemplate = (filter, currentFilterType) => {
   const handleChecked = () => currentFilterType === type ? 'checked' : '';
   const handleDisabled = () => count === 0 ? 'disabled' : '';
 
-  // console.log(type, currentFilterType);
   return (
     `<div class="trip-filters__filter">
     <input id="filter-${type}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${type}" ${handleChecked()} ${handleDisabled()}>
@@ -20,12 +19,17 @@ const createTemplate = (filters, currentFilterType) => {
     .join('');
 
   return (
-    `<form class="trip-filters" action="#" method="get">
+    `
+    <div class="trip-main__trip-controls  trip-controls">
+            <div class="trip-controls__filters">
+              <h2 class="visually-hidden">Filter events</h2><form class="trip-filters" action="#" method="get">
 
     ${filterItemsTemplate}
 
     <button class="visually-hidden" type="submit">Accept filter</button>
-  </form>`
+  </form>
+  </div>
+          </div>`
   );
 };
 
