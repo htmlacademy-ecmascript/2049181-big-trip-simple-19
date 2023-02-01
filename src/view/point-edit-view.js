@@ -286,7 +286,7 @@ export default class PointEditView extends AbstractStatefulView {
     this.updateElement({
       type: pointType,
       allOffers: this.#getOffersByPointType(pointType),
-      offers: []
+      offers: (this._state.type === pointType) ? this.#getCheckedOffersIds() : []
     });
   };
 

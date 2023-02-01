@@ -3,7 +3,19 @@ import FilterModel from './model/filter-model.js';
 import FilterView from './view/filter-view.js';
 import BoardPresenter from './presenter/board-presenter.js';
 import { render } from './framework/render.js';
-import { generateFilter } from './utils/filter.js';
+
+const filters = [
+  {
+    type: 'everything',
+    name: 'Everything',
+    count: 1
+  },
+  {
+    type: 'future',
+    name: 'Future',
+    count: 0
+  }
+];
 
 const siteBodyElement = document.querySelector('.page-body');
 const siteFiltersContainerElement = siteBodyElement.querySelector('.trip-controls__filters');
@@ -15,7 +27,9 @@ const boardPresenter = new BoardPresenter({
   dataModel
 });
 
-const filters = generateFilter(dataModel.points);
-
-render(new FilterView({filters}), siteFiltersContainerElement);
+render(new FilterView({
+  filters,
+  currentFilterType: 'everything',
+  onFilterTypeChange: () => {}
+}), siteFiltersContainerElement);
 boardPresenter.init();
