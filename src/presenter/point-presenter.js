@@ -14,8 +14,8 @@ export default class PointPresenter {
   #handleDataChange = null;
   #handleModeChange = null;
   #point = null;
-  #newPoint = null;
-  #newEditPoint = null;
+  #newPointComponent = null;
+  #newEditPointComponent = null;
   #mode = Mode.DEFAULT;
   #allDestinations = [];
   #getOffersByPointType = null;
@@ -37,17 +37,17 @@ export default class PointPresenter {
   init(point) {
     this.#point = point;
 
-    const prevPoint = this.#newPoint;
-    const prevEditPoint = this.#newEditPoint;
+    const prevPointComponent = this.#newPointComponent;
+    const prevEditPointComponent = this.#newEditPointComponent;
 
-    this.#newPoint = new PointView({
+    this.#newPointComponent = new PointView({
       point: this.#point,
       handleExpandButtonClick: this.#handleOpenForm,
       allDestinations: this.#allDestinations,
       getOffersByPointType: this.#getOffersByPointType
     });
 
-    this.#newEditPoint = new PointEditView({
+    this.#newEditPointComponent = new PointEditView({
       point: this.#point,
       handleSubmitForm: this.#handleSubmitForm,
       handleDeleteClick: this.#handleDeleteClick,
@@ -56,26 +56,26 @@ export default class PointPresenter {
       getOffersByPointType: this.#getOffersByPointType
     });
 
-    if (prevPoint === null || prevEditPoint === null) {
-      render(this.#newPoint, this.#pointsListContainer);
+    if (prevPointComponent === null || prevEditPointComponent === null) {
+      render(this.#newPointComponent, this.#pointsListContainer);
       return;
     }
 
-    if (this.#pointsListContainer.contains(prevPoint.element)) {
-      replace(this.#newPoint, prevPoint);
+    if (this.#pointsListContainer.contains(prevPointComponent.element)) {
+      replace(this.#newPointComponent, prevPointComponent);
     }
 
-    if (this.#pointsListContainer.contains(prevEditPoint.element)) {
-      replace(this.#newEditPoint, prevEditPoint);
+    if (this.#pointsListContainer.contains(prevEditPointComponent.element)) {
+      replace(this.#newEditPointComponent, prevEditPointComponent);
     }
 
-    remove(prevPoint);
-    remove(prevEditPoint);
+    remove(prevPointComponent);
+    remove(prevEditPointComponent);
   }
 
   destroy() {
-    remove(this.#newPoint);
-    remove(this.#newEditPoint);
+    remove(this.#newPointComponent);
+    remove(this.#newEditPointComponent);
   }
 
   resetView() {
@@ -85,21 +85,21 @@ export default class PointPresenter {
   }
 
   #replacePointToForm() {
-    replace(this.#newEditPoint, this.#newPoint);
+    replace(this.#newEditPointComponent, this.#newPointComponent);
     this.#mode = Mode.EDITING;
 
     document.addEventListener('keydown', this.#escKeydownHandler);
   }
 
   #replaceFormToPoint() {
-    replace(this.#newPoint, this.#newEditPoint);
+    replace(this.#newPointComponent, this.#newEditPointComponent);
     this.#mode = Mode.DEFAULT;
 
     document.removeEventListener('keydown', this.#escKeydownHandler);
   }
 
   #resetEditFormView() {
-    this.#newEditPoint.reset(this.#point);
+    this.#newEditPointComponent.reset(this.#point);
   }
 
   #handleCloseForm = () => {

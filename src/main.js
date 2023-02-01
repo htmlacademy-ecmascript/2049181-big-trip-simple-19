@@ -10,12 +10,14 @@ const dataModel = new DataModel();
 const filterModel = new FilterModel();
 const boardPresenter = new BoardPresenter({
   boardContainer: siteTripEventsContainerElement,
-  dataModel
+  dataModel,
+  filterModel
 });
 const filterPresenter = new FilterPresenter({
   filterContainer: siteFiltersContainerElement,
   filterModel: filterModel,
   dataModel: dataModel
 });
+
 filterPresenter.init();
 boardPresenter.init();

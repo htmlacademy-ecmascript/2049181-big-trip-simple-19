@@ -57,7 +57,7 @@ const sortByPrice = (pointA, pointB) => {
 
 const isPlannedDate = (date) => {
   dayjs.extend(isSameOrAfter);
-  return dayjs(date).isSameOrAfter(dayjs(), 'm');
+  return dayjs(date).isSameOrAfter(dayjs(), 'D');
 };
 
 const isDateEqual = (dateA, dateB) => dayjs(dateA).isSame(dateB, 'D');

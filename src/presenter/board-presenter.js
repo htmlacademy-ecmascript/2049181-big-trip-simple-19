@@ -4,6 +4,7 @@ import SortView from '../view/sort-view.js';
 import PointPresenter from './point-presenter.js';
 import {RenderPosition, render, remove} from '../framework/render.js';
 import {SortType, UpdateType, UserAction} from '../const.js';
+import { filter } from '../utils/filter.js';
 import {
   sortByDay,
   sortByPrice,
@@ -14,6 +15,7 @@ export default class BoardPresenter {
   #currentSortType = SortType.DAY;
   #boardContainer = null;
   #dataModel = null;
+  #filterModel = null;
   #destinations = [];
   #offers = [];
   #tripEventsList = new TripEventsListView();
@@ -23,22 +25,29 @@ export default class BoardPresenter {
 
   constructor({
     boardContainer,
-    dataModel
+    dataModel,
+    filterModel
   }) {
     this.#boardContainer = boardContainer;
     this.#dataModel = dataModel;
+    this.#filterModel = filterModel;
 
     this.#dataModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get points() {
+    const filterType = this.#filterModel.filter;
+    const points = this.#dataModel.points;
+    const filteredPoints = filter[filterType](points);
+
     switch (this.#currentSortType) {
       case SortType.DAY:
-        return [...this.#dataModel.points].sort(sortByDay);
+        return filteredPoints.sort(sortByDay);
       case SortType.PRICE:
-        return [...this.#dataModel.points].sort(sortByPrice);
+        return filteredPoints.sort(sortByPrice);
     }
-    return this.#dataModel.points;
+    return filteredPoints;
   }
 
   init() {
