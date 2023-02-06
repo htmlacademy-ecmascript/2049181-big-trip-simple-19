@@ -16,9 +16,11 @@ const BLANK_POINT = {
   destination: null,
   id: null,
   offers: [],
-  type: 'flight',
+  type: TYPES[0],
   allOffers: []
 };
+
+const FLATPICKR_DATE_FORMAT = 'd/m/y H:i';
 
 const createEventTypeItemTemplate = (type, pointType) => {
   const handleCheckedClass = () => pointType === type
@@ -261,7 +263,7 @@ export default class PointEditView extends AbstractStatefulView {
     this.#startTimeDatepicker = flatpickr(
       this.element.querySelector('[name = "event-start-time"]'),
       {
-        dateFormat: 'd/m/y H:i',
+        dateFormat: FLATPICKR_DATE_FORMAT,
         enableTime: true,
         'time_24hr': true,
         defaultDate: this._state.dateFrom,
@@ -274,7 +276,7 @@ export default class PointEditView extends AbstractStatefulView {
     this.#endTimeDatepicker = flatpickr(
       this.element.querySelector('[name = "event-end-time"]'),
       {
-        dateFormat: 'd/m/y H:i',
+        dateFormat: FLATPICKR_DATE_FORMAT,
         enableTime: true,
         'time_24hr': true,
         minDate: this._state.dateFrom,

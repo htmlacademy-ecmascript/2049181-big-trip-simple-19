@@ -4,9 +4,15 @@ import { offersByType } from '../mock/offer.js';
 import { destinations } from '../mock/destination.js';
 
 export default class DataModel extends Observable {
+  #dataApiService = null;
   #points = generatePoints();
   #offers = offersByType;
   #destinations = destinations;
+
+  constructor({dataApiService}) {
+    super();
+    this.#dataApiService = dataApiService;
+  }
 
   get points() {
     return this.#points;
@@ -59,4 +65,20 @@ export default class DataModel extends Observable {
 
     this._notify(updateType);
   }
+
+  #adaptToClient (point) {
+    const adaptedPoint = {
+      ...point,
+      basePrice: point.base_price,
+      dateFrom: new Date (point.date_from),
+      dateTo: new Date (point.date_to)
+    };
+
+    delete adaptedPoint['base_price'];
+    delete adaptedPoint['date_from'];
+    delete adaptedPoint['date_to'];
+
+    return adaptedPoint;
+  }
+
 }
