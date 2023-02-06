@@ -4,7 +4,7 @@ import { remove, render, RenderPosition } from '../framework/render.js';
 import PointEditView from '../view/point-edit-view.js';
 
 export default class NewPointPresenter {
-  #pointsListContainer = null;
+  #boardContainer = null;
   #handleDataChange = null;
   #handleDestroy = null;
   #allDestinations = null;
@@ -13,13 +13,13 @@ export default class NewPointPresenter {
   #pointEdit = null;
 
   constructor ({
-    pointsListContainer,
+    boardContainer,
     onDataChange,
     onDestroy,
     allDestinations,
     getOffersByPointType
   }) {
-    this.#pointsListContainer = pointsListContainer;
+    this.#boardContainer = boardContainer;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
     this.#allDestinations = allDestinations;
@@ -38,7 +38,7 @@ export default class NewPointPresenter {
       getOffersByPointType: this.#getOffersByPointType,
     });
 
-    render(this.#pointEdit, this.#pointsListContainer, RenderPosition.AFTERBEGIN);
+    render(this.#pointEdit, this.#boardContainer.querySelector('.trip-events__list'), RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }

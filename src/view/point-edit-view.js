@@ -103,10 +103,12 @@ ${handlePicturesTemplate(destination?.pictures, mode)}
   : '';
 
 const handleRollupButton = (mode) => mode ?
-  `<button class="event__rollup-btn" type="button">
+  `<button class="event__rollup-btn" type="button" display="none" >
 <span class="visually-hidden">Open event</span>
 </button>`
-  : '';
+  : `<button class="event__rollup-btn" type="button" display="none" style="display: none">
+  <span class="visually-hidden">Open event</span>
+  </button>`;
 
 const createTemplate = (point) => {
   const {basePrice, dateFrom, dateTo, destinationData, type, offers, allOffers, allDestinations, mode} = point;

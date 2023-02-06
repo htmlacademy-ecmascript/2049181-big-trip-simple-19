@@ -36,7 +36,7 @@ export default class BoardPresenter {
     this.#dataModel = dataModel;
     this.#filterModel = filterModel;
     this.#newPointPresenter = new NewPointPresenter({
-      pointsListContainer: this.#boardContainer,
+      boardContainer: this.#boardContainer,
       onDataChange: this.#handleViewAction,
       onDestroy: onNewPointDestroy,
       allDestinations: [...this.#dataModel.destinations],
