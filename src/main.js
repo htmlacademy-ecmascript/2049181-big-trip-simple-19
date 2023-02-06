@@ -41,6 +41,6 @@ function handleNewPointFormClose() {
 }
 
 filterPresenter.init();
-render(newPointButton, tripMainElement);
 boardPresenter.init();
-dataModel.init();
+dataModel.init()
+  .finally(() => {render(newPointButton, tripMainElement);});

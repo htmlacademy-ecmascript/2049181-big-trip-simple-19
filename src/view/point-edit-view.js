@@ -102,6 +102,16 @@ ${handlePicturesTemplate(destination?.pictures, mode)}
 </section>`
   : '';
 
+const handleOffersTemplate = (selectedOffers, allOffers) => allOffers.length !== 0 ?
+  `<section class="event__section  event__section--offers">
+<h3 class="event__section-title  event__section-title--offers">Offers</h3>
+
+<div class="event__available-offers">
+  ${createOffersTemplate(selectedOffers, allOffers)}
+</div>
+</section>`
+  : '';
+
 const handleRollupButton = (mode) => mode ?
   `<button class="event__rollup-btn" type="button" display="none" >
 <span class="visually-hidden">Open event</span>
@@ -141,7 +151,7 @@ const createTemplate = (point) => {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${capitalize(type)}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationData?.name || ''}" list="destination-list-1" required>
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationData?.name || ''}" list="destination-list-1" autocomplete="off" required>
           <datalist id="destination-list-1">
             ${createDestinationCitiesTemplate(allDestinations)}
           </datalist>
@@ -168,13 +178,7 @@ const createTemplate = (point) => {
         ${handleRollupButton(mode)}
       </header>
       <section class="event__details">
-        <section class="event__section  event__section--offers">
-          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-          <div class="event__available-offers">
-            ${createOffersTemplate(offers, allOffers)}
-          </div>
-        </section>
+            ${handleOffersTemplate(offers, allOffers)}
             ${handleDestinationTemplate(destinationData, mode)}
       </section>
     </form>
