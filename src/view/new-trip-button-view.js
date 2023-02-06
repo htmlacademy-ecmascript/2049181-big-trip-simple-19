@@ -6,6 +6,7 @@ const createTemplate = () => (
 
 export default class NewTripButtonView extends AbstractView {
   #handleClick = null;
+
   constructor({onClick}) {
     super();
     this.#handleClick = onClick;

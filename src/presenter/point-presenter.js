@@ -13,12 +13,12 @@ export default class PointPresenter {
   #pointsListContainer = null;
   #handleDataChange = null;
   #handleModeChange = null;
-  #point = null;
+  #getOffersByPointType = null;
   #newPointComponent = null;
   #newEditPointComponent = null;
+  #point = null;
   #mode = Mode.DEFAULT;
   #allDestinations = [];
-  #getOffersByPointType = null;
 
   constructor({
     pointsListContainer,
@@ -62,12 +62,13 @@ export default class PointPresenter {
       return;
     }
 
-    if (this.#pointsListContainer.contains(prevPointComponent.element)) {
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.#newPointComponent, prevPointComponent);
     }
 
-    if (this.#pointsListContainer.contains(prevEditPointComponent.element)) {
-      replace(this.#newEditPointComponent, prevEditPointComponent);
+    if (this.#mode === Mode.EDITING) {
+      replace(this.#newPointComponent, prevEditPointComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevPointComponent);
@@ -81,8 +82,44 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#resetEditFormView();
       this.#replaceFormToPoint();
     }
+  }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#newEditPointComponent.updateElement({
+        isDisabled: true,
+        isSaving: true
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#newEditPointComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#newPointComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#newEditPointComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    this.#newEditPointComponent.shake(resetFormState);
   }
 
   #replacePointToForm() {
@@ -109,12 +146,11 @@ export default class PointPresenter {
   };
 
   #handleSubmitForm = (update) => {
-    const isPatch = isDateEqual(this.#point.dateFrom, update.dateFrom);
+    const isPatch = (isDateEqual(this.#point.dateFrom, update.dateFrom) && isDateEqual(this.#point.dateTo, update.dateTo));
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
       isPatch ? UpdateType.PATCH : UpdateType.MINOR,
       update);
-    this.#replaceFormToPoint();
   };
 
   #handleDeleteClick = (point) => {

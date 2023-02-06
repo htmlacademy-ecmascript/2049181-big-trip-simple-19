@@ -57,16 +57,22 @@ const sortByPrice = (pointA, pointB) => {
 
 const isPlannedDate = (date) => {
   dayjs.extend(isSameOrAfter);
-  return dayjs(date).isSameOrAfter(dayjs(), 'D');
+  return dayjs(date).isSameOrAfter(dayjs());
 };
 
-const isDateEqual = (dateA, dateB) => dayjs(dateA).isSame(dateB, 'D');
+const isDateEqual = (dateA, dateB) => dayjs(dateA).isSame(dayjs(dateB));
+
+const isStartDateNotBiggerFinish = (startDate, finishDate) => {
+  dayjs.extend(isSameOrAfter);
+  return dayjs(finishDate).isSameOrAfter(dayjs(startDate));
+};
 
 export {
   getOffersByPointType,
   humanizeTopicDate,
   humanizeEditDate,
   humanizeMinutes,
+  isStartDateNotBiggerFinish,
   isPlannedDate,
   isDateEqual,
   humanizeDate,
