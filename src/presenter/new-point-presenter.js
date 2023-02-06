@@ -9,7 +9,7 @@ export default class NewPointPresenter {
   #allDestinations = null;
   #getOffersByPointType = null;
 
-  #pointEdit = null;
+  #pointEditComponent = null;
 
   constructor ({
     boardContainer,
@@ -26,33 +26,52 @@ export default class NewPointPresenter {
   }
 
   init() {
-    if (this.#pointEdit !== null) {
+    if (this.#pointEditComponent !== null) {
       return;
     }
 
-    this.#pointEdit = new PointEditView({
+    this.#pointEditComponent = new PointEditView({
       handleSubmitForm: this.#handleFormSubmit,
       handleDeleteClick: this.#handleDeleteClick,
       allDestinations: this.#allDestinations,
       getOffersByPointType: this.#getOffersByPointType,
     });
 
-    render(this.#pointEdit, this.#boardContainer.querySelector('.trip-events__list'), RenderPosition.AFTERBEGIN);
+    render(this.#pointEditComponent, this.#boardContainer.querySelector('.trip-events__list'), RenderPosition.AFTERBEGIN);
 
     document.addEventListener('keydown', this.#escKeyDownHandler);
   }
 
   destroy() {
-    if (this.#pointEdit === null) {
+    if (this.#pointEditComponent === null) {
       return;
     }
 
     this.#handleDestroy();
 
-    remove(this.#pointEdit);
-    this.#pointEdit = null;
+    remove(this.#pointEditComponent);
+    this.#pointEditComponent = null;
 
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+  }
+
+  setSaving() {
+    this.#pointEditComponent.updateElement({
+      isDisabled: true,
+      isSaving: true
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#pointEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    this.#pointEditComponent.shake(resetFormState);
   }
 
   #handleFormSubmit = (point) => {
@@ -61,7 +80,6 @@ export default class NewPointPresenter {
       UpdateType.MINOR,
       point
     );
-    this.destroy();
   };
 
   #handleDeleteClick = () => {

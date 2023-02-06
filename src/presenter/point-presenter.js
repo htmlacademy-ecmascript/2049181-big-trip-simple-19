@@ -62,12 +62,13 @@ export default class PointPresenter {
       return;
     }
 
-    if (this.#pointsListContainer.contains(prevPointComponent.element)) {
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.#newPointComponent, prevPointComponent);
     }
 
-    if (this.#pointsListContainer.contains(prevEditPointComponent.element)) {
-      replace(this.#newEditPointComponent, prevEditPointComponent);
+    if (this.#mode === Mode.EDITING) {
+      replace(this.#newPointComponent, prevEditPointComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(prevPointComponent);
@@ -83,6 +84,41 @@ export default class PointPresenter {
     if (this.#mode !== Mode.DEFAULT) {
       this.#replaceFormToPoint();
     }
+  }
+
+  setSaving() {
+    if (this.#mode === Mode.EDITING) {
+      this.#newEditPointComponent.updateElement({
+        isDisabled: true,
+        isSaving: true
+      });
+    }
+  }
+
+  setDeleting() {
+    if (this.#mode === Mode.EDITING) {
+      this.#newEditPointComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  }
+
+  setAborting() {
+    if (this.#mode === Mode.DEFAULT) {
+      this.#newPointComponent.shake();
+      return;
+    }
+
+    const resetFormState = () => {
+      this.#newEditPointComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    this.#newEditPointComponent.shake(resetFormState);
   }
 
   #replacePointToForm() {
@@ -114,7 +150,6 @@ export default class PointPresenter {
       UserAction.UPDATE_POINT,
       isPatch ? UpdateType.PATCH : UpdateType.MINOR,
       update);
-    this.#replaceFormToPoint();
   };
 
   #handleDeleteClick = (point) => {

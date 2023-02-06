@@ -80,6 +80,7 @@ export default class DataModel extends Observable {
     if (index === -1) {
       throw new Error('Can\'t delete unexisting point');
     }
+
     try {
       await this.#dataApiService.deletePoint(update);
       this.#points = [
