@@ -1,9 +1,13 @@
 import dayjs from 'dayjs';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter.js';
 
 const DATE_TOPIC_FORMAT = 'D MMM';
 const DATE_FORMAT = 'YYYY-MM-DD';
 const MINUTES_FORMAT = 'HH:mm';
 const DATE_EDIT_FORMAT = 'DD/MM/YY';
+
+const getOffersByPointType = (pointType, offersByType) => offersByType
+  .find((offer) => offer.type === pointType).offers;
 
 const humanizeTopicDate = (date) => date
   ? dayjs(date).format(DATE_TOPIC_FORMAT)
@@ -51,10 +55,20 @@ const sortByPrice = (pointA, pointB) => {
   return weight ?? pointB.basePrice - pointA.basePrice;
 };
 
+const isPlannedDate = (date) => {
+  dayjs.extend(isSameOrAfter);
+  return dayjs(date).isSameOrAfter(dayjs(), 'D');
+};
+
+const isDateEqual = (dateA, dateB) => dayjs(dateA).isSame(dateB, 'D');
+
 export {
+  getOffersByPointType,
   humanizeTopicDate,
   humanizeEditDate,
   humanizeMinutes,
+  isPlannedDate,
+  isDateEqual,
   humanizeDate,
   capitalize,
   sortByDay,

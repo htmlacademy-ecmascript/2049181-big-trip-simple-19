@@ -1,22 +1,39 @@
-import PointsModel from './model/points-model.js';
-import DestinationsModel from './model/destinations-model.js';
-import OffersModel from './model/offers-model.js';
-import FilterView from './view/filter-view.js';
-import BoardPresenter from './presenter/board-presenter.js';
 import { render } from './framework/render.js';
+import DataModel from './model/data-model.js';
+import FilterModel from './model/filter-model.js';
+import BoardPresenter from './presenter/board-presenter.js';
+import FilterPresenter from './presenter/filter-presenter.js';
+import NewTripButtonView from './view/new-trip-button-view.js';
 
 const siteBodyElement = document.querySelector('.page-body');
-const siteFiltersContainerElement = siteBodyElement.querySelector('.trip-controls__filters');
-const siteTripEventsContainerElement = siteBodyElement.querySelector('.trip-events');
-const pointsModel = new PointsModel;
-const destinationsModel = new DestinationsModel;
-const offersModel = new OffersModel;
+const tripMainElement = siteBodyElement.querySelector('.trip-main');
+const tripEventsContainerElement = siteBodyElement.querySelector('.trip-events');
+const dataModel = new DataModel();
+const filterModel = new FilterModel();
+const newPointButton = new NewTripButtonView({
+  onClick: handleNewPointButtonClick
+});
 const boardPresenter = new BoardPresenter({
-  boardContainer: siteTripEventsContainerElement,
-  pointsModel,
-  destinationsModel,
-  offersModel
+  boardContainer: tripEventsContainerElement,
+  dataModel,
+  filterModel,
+  onNewPointDestroy: handleNewPointFormClose
+});
+const filterPresenter = new FilterPresenter({
+  filterContainer: tripMainElement,
+  filterModel: filterModel,
+  dataModel: dataModel
 });
 
-render(new FilterView(pointsModel.points), siteFiltersContainerElement);
+function handleNewPointButtonClick() {
+  boardPresenter.createTask();
+  newPointButton.element.disabled = true;
+}
+
+function handleNewPointFormClose() {
+  newPointButton.element.disabled = false;
+}
+
+filterPresenter.init();
+render(newPointButton, tripMainElement);
 boardPresenter.init();
