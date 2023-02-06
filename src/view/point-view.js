@@ -94,6 +94,7 @@ export default class PointView extends AbstractView {
       destinationData: this.#getDestinationById(point),
       allOffers: this.#getOffersByPointType(point.type)
     };
+
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#expandButtonClickHandler);
   }
 

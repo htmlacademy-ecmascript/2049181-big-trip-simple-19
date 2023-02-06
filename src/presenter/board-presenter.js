@@ -34,12 +34,12 @@ export default class BoardPresenter {
   #dataModel = null;
   #filterModel = null;
   #filterType = FilterType.EVERYTHING;
-  #tripEventsList = new TripEventsListView();
+  #tripEventsListComponent = new TripEventsListView();
   #loadingComponent = new LoadingView();
+  #noPointsComponent = null;
+  #sortComponent = null;
   #pointPresenters = new Map ();
   #newPointPresenter = null;
-  #sortComponent = null;
-  #noPointsComponent = null;
   #onNewPointDestroy = null;
   #isLoading = true;
   #uiBlocker = new UiBlocker({
@@ -73,6 +73,7 @@ export default class BoardPresenter {
       case SortType.PRICE:
         return filteredPoints.sort(sortByPrice);
     }
+
     return filteredPoints;
   }
 
@@ -98,12 +99,13 @@ export default class BoardPresenter {
       allDestinations: this.destinations,
       getOffersByPointType: this.#getOffersByPointType
     });
+
     this.#newPointPresenter.init();
   }
 
   #renderPoint(point) {
     const pointPresenter = new PointPresenter({
-      pointsListContainer: this.#tripEventsList.element,
+      pointsListContainer: this.#tripEventsListComponent.element,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange,
       allDestinations: this.destinations,
@@ -127,6 +129,7 @@ export default class BoardPresenter {
       onSortChange: this.#handleSortChange,
       currentSortType: this.#currentSortType
     });
+
     render(this.#sortComponent, this.#boardContainer, RenderPosition.BEFOREEND);
   }
 
@@ -146,7 +149,7 @@ export default class BoardPresenter {
     }
 
     this.#renderSort();
-    render(this.#tripEventsList, this.#boardContainer);
+    render(this.#tripEventsListComponent, this.#boardContainer);
     this.points.forEach((point) => this.#renderPoint(point));
   }
 
@@ -228,6 +231,7 @@ export default class BoardPresenter {
 
   #handleModeChange = () => {
     this.#pointPresenters.forEach((presenter) => presenter.resetView());
+
     if(this.#newPointPresenter) {
       this.#newPointPresenter.destroy();
     }
@@ -242,5 +246,4 @@ export default class BoardPresenter {
     this.#clearBoard();
     this.#renderBoard();
   };
-
 }

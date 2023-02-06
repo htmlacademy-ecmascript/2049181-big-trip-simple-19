@@ -13,12 +13,12 @@ export default class PointPresenter {
   #pointsListContainer = null;
   #handleDataChange = null;
   #handleModeChange = null;
-  #point = null;
+  #getOffersByPointType = null;
   #newPointComponent = null;
   #newEditPointComponent = null;
+  #point = null;
   #mode = Mode.DEFAULT;
   #allDestinations = [];
-  #getOffersByPointType = null;
 
   constructor({
     pointsListContainer,
@@ -82,6 +82,7 @@ export default class PointPresenter {
 
   resetView() {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#resetEditFormView();
       this.#replaceFormToPoint();
     }
   }
@@ -145,7 +146,7 @@ export default class PointPresenter {
   };
 
   #handleSubmitForm = (update) => {
-    const isPatch = isDateEqual(this.#point.dateFrom, update.dateFrom);
+    const isPatch = (isDateEqual(this.#point.dateFrom, update.dateFrom) && isDateEqual(this.#point.dateTo, update.dateTo));
     this.#handleDataChange(
       UserAction.UPDATE_POINT,
       isPatch ? UpdateType.PATCH : UpdateType.MINOR,

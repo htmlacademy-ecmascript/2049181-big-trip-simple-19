@@ -1,11 +1,12 @@
-import { TYPES } from '../const.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import {
-  capitalize,
-  humanizeMinutes,
-  humanizeEditDate
-} from '../utils/point.js';
+import { TYPES } from '../const.js';
 import flatpickr from 'flatpickr';
+import {
+  isStartDateNotBiggerFinish,
+  humanizeEditDate,
+  humanizeMinutes,
+  capitalize
+} from '../utils/point.js';
 
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -71,7 +72,6 @@ const createOfferTemplate = (offer, selectedOffers, isDisabled) => {
 
 const createOffersTemplate = (selectedOffers, allOffers, isDisabled) => {
   const resultOffers = [];
-
   allOffers.forEach((item) => resultOffers.push(createOfferTemplate(item, selectedOffers, isDisabled)));
 
   return resultOffers.join('');
@@ -81,8 +81,8 @@ const createPictureTemplate = (picture) => `<img class="event__photo" src="${pic
 
 const createPicturesTemplate = (pictures) => {
   const pictureTemplates = [];
-
   pictures.forEach((picture) => pictureTemplates.push(createPictureTemplate(picture)));
+
   return pictureTemplates.join('\r\n');
 };
 
@@ -94,26 +94,25 @@ const handlePicturesTemplate = (pictures, mode) => (pictures && !mode) ?
      </div>`
   : '';
 
-const handleDestinationTemplate = (destination, mode) => destination ?
-  `<section class="event__section  event__section--destination">
+const handleDestinationTemplate = (destination, mode) => destination
+  ? `<section class="event__section  event__section--destination">
 <h3 class="event__section-title  event__section-title--destination">Destination</h3>
 <p class="event__destination-description">${destination?.description || ''}</p>
 ${handlePicturesTemplate(destination?.pictures, mode)}
 </section>`
   : '';
 
-const handleOffersTemplate = (selectedOffers, allOffers, isDisabled) => allOffers.length !== 0 ?
-  `<section class="event__section  event__section--offers" >
+const handleOffersTemplate = (selectedOffers, allOffers, isDisabled) => allOffers.length !== 0
+  ? `<section class="event__section  event__section--offers" >
 <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
 <div class="event__available-offers" >
   ${createOffersTemplate(selectedOffers, allOffers, isDisabled)}
 </div>
 </section>`
   : '';
 
-const handleRollupButton = (mode, isDisabled) => mode ?
-  `<button class="event__rollup-btn" type="button" display="none" ${isDisabled ? 'disabled' : ''}>
+const handleRollupButton = (mode, isDisabled) => mode
+  ? `<button class="event__rollup-btn" type="button" display="none" ${isDisabled ? 'disabled' : ''}>
 <span class="visually-hidden">Open event</span>
 </button>`
   : `<button class="event__rollup-btn" type="button" display="none" style="display: none ">
@@ -122,10 +121,10 @@ const handleRollupButton = (mode, isDisabled) => mode ?
 
 const createTemplate = (point) => {
   const {basePrice, dateFrom, dateTo, destinationData, type, offers, allOffers, allDestinations, mode, isDisabled, isSaving, isDeleting} = point;
-  const handleResetButtonName = (price) => {
-    if (price > 0 && isDeleting) {
+  const handleResetButtonName = () => {
+    if (mode && isDeleting) {
       return 'Deleting';
-    } else if (price > 0) {
+    } else if (mode) {
       return 'Delete';
     } else {
       return 'Cancel';
@@ -176,7 +175,7 @@ const createTemplate = (point) => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice}" required ${isDisabled ? 'disabled' : ''}>
+          <input class="event__input  event__input--price" id="event-price-1" type="number" min="0" name="event-price" value="${basePrice}" required ${isDisabled ? 'disabled' : ''}>
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving' : 'Save'}</button>
@@ -219,6 +218,7 @@ export default class PointEditView extends AbstractStatefulView {
     this.#allDestinations = allDestinations;
     this.#getOffersByPointType = getOffersByPointType;
     this.#mode = mode;
+
     this._setState(PointEditView.parsePointToState(point, this.#getDestinationById, this.#getOffersByPointType, this.#allDestinations, this.#mode));
     this._restoreHandlers();
   }
@@ -239,19 +239,30 @@ export default class PointEditView extends AbstractStatefulView {
   }
 
   reset(task) {
-    this.updateElement(task);
+    const update = {
+      ...task,
+      allOffers: this.#getOffersByPointType(task.type),
+    };
+    this.updateElement(update);
   }
 
   _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#submitFormHandler);
-    if (this.#mode) {
-      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupButtonClickHandler);
-    }
     this.element.querySelector('.event__type-group').addEventListener('click', this.#typeButtonClickHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationDatalistChangeHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#eventPriceChangeHandler);
-    this.element.querySelector('.event__available-offers').addEventListener('click', this.#offersClickHandler);
+
+    if (this.#mode) {
+      this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#rollupButtonClickHandler);
+    }
+
+    const availableOffers = this.element.querySelector('.event__available-offers');
+
+    if(availableOffers) {
+      availableOffers.addEventListener('click', this.#offersClickHandler);
+    }
+
     this.#setStartTimeDatepicker();
     this.#setEndTimeDatepicker();
   }
@@ -301,8 +312,13 @@ export default class PointEditView extends AbstractStatefulView {
   }
 
   #startTimeChangeHandler = ([time]) => {
+    const handleDateTo = (dateFrom, dateTo) => isStartDateNotBiggerFinish(dateFrom, dateTo)
+      ? dateTo
+      : dateFrom;
+
     this.updateElement({
       dateFrom: time,
+      dateTo: handleDateTo(time, this._state.dateTo),
       offers: this.#getCheckedOffersIds()
     });
   };

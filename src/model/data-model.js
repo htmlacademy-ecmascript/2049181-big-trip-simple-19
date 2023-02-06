@@ -52,12 +52,14 @@ export default class DataModel extends Observable {
     try {
       const response = await this.#dataApiService.updatePoint(update);
       const updatedPoint = this.#adaptToClient(response);
+
       this.#points = [
         ...this.#points.slice(0, index),
         updatedPoint,
         ...this.#points.slice(index + 1)
       ];
       this._notify(updateType, updatedPoint);
+
     } catch(err) {
       throw new Error('Can\'t update point');
     }
@@ -67,8 +69,10 @@ export default class DataModel extends Observable {
     try {
       const response = await this.#dataApiService.addPoint(update);
       const newPoint = this.#adaptToClient(response);
+
       this.#points = [newPoint, ...this.#points];
       this._notify(updateType, newPoint);
+
     } catch(err) {
       throw new Error('Can\'t add point');
     }
@@ -83,10 +87,12 @@ export default class DataModel extends Observable {
 
     try {
       await this.#dataApiService.deletePoint(update);
+
       this.#points = [
         ...this.#points.slice(0, index),
         ...this.#points.slice(index + 1)
       ];
+
       this._notify(updateType);
     } catch(err) {
       throw new Error('Can\'t delete point');
