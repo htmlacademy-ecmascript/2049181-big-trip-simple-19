@@ -344,7 +344,7 @@ export default class PointEditView extends AbstractStatefulView {
 
   static parseStateToPoint(state, getOffers) {
     const point = {...state};
-    point.basePrice = document.querySelector('.event__input--price').value;
+    point.basePrice = parseInt(document.querySelector('.event__input--price').value, 10);
 
     if (getOffers) {
       point.offers = getOffers();

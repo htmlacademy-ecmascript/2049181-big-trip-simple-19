@@ -1,13 +1,11 @@
 import Observable from '../framework/observable.js';
-import { generatePoints } from '../mock/point.js';
-import { offersByType } from '../mock/offer.js';
-import { destinations } from '../mock/destination.js';
+import { UpdateType } from '../const.js';
 
 export default class DataModel extends Observable {
   #dataApiService = null;
-  #points = generatePoints();
-  #offers = offersByType;
-  #destinations = destinations;
+  #points = [];
+  #offers = [];
+  #destinations = [];
 
   constructor({dataApiService}) {
     super();
@@ -24,6 +22,24 @@ export default class DataModel extends Observable {
 
   get destinations() {
     return this.#destinations;
+  }
+
+  async init() {
+    try {
+      const points = await this.#dataApiService.points;
+      const offers = await this.#dataApiService.offers;
+      const destinations = await this.#dataApiService.destinations;
+      this.#points = points.map(this.#adaptToClient);
+      this.#offers = offers;
+      this.#destinations = destinations;
+
+    } catch(err) {
+      this.#points = [];
+      this.#offers = [];
+      this.#destinations = [];
+    }
+
+    this._notify(UpdateType.INIT);
   }
 
   updatePoint(updateType, update) {
