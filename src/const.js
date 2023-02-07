@@ -33,4 +33,10 @@ const UpdateType = {
   INIT: 'INIT'
 };
 
-export { TYPES, FilterType, SortType, UserAction, UpdateType };
+export {
+  TYPES,
+  FilterType,
+  UserAction,
+  UpdateType,
+  SortType
+};
