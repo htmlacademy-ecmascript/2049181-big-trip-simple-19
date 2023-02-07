@@ -1,3 +1,4 @@
+import he from 'he';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { TYPES } from '../const.js';
 import flatpickr from 'flatpickr';
@@ -42,7 +43,7 @@ const createEventTypeItemsTemplate = (allTypes, pointType) => {
   return templates.join('\r\n\r\n');
 };
 
-const createDestinationCityTemplate = (city) => `<option value="${city.name}"></option>`;
+const createDestinationCityTemplate = (city) => `<option value="${he.encode(city.name)}"></option>`;
 
 const createDestinationCitiesTemplate = (allCities) => {
   const templates = [];
@@ -60,9 +61,9 @@ const createOfferTemplate = (offer, selectedOffers, isDisabled) => {
 
   return (
     `<div class="event__offer-selector">
-  <input class="event__offer-checkbox  visually-hidden" id="event-offer-${getOfferName(offer)}-${offer.id}" type="checkbox" name="event-offer-${getOfferName(offer)}" ${checked} ${isDisabled ? 'disabled' : ''}>
+  <input class="event__offer-checkbox  visually-hidden" id="event-offer-${getOfferName(offer)}-${offer.id}" type="checkbox" name="event-offer-${he.encode(getOfferName(offer))}" ${checked} ${isDisabled ? 'disabled' : ''}>
   <label class="event__offer-label" for="event-offer-${getOfferName(offer)}-${offer.id}">
-    <span class="event__offer-title">${offer.title}</span>
+    <span class="event__offer-title">${he.encode(offer.title)}</span>
     &plus;&euro;&nbsp;
     <span class="event__offer-price">${offer.price}</span>
   </label>
@@ -77,7 +78,7 @@ const createOffersTemplate = (selectedOffers, allOffers, isDisabled) => {
   return resultOffers.join('');
 };
 
-const createPictureTemplate = (picture) => `<img class="event__photo" src="${picture.src}" alt="${picture.description}">`;
+const createPictureTemplate = (picture) => `<img class="event__photo" src="${he.encode(picture.src)}" alt="${he.encode(picture.description)}">`;
 
 const createPicturesTemplate = (pictures) => {
   const pictureTemplates = [];
@@ -97,7 +98,7 @@ const handlePicturesTemplate = (pictures, mode) => (pictures && !mode) ?
 const handleDestinationTemplate = (destination, mode) => destination
   ? `<section class="event__section  event__section--destination">
 <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-<p class="event__destination-description">${destination?.description || ''}</p>
+<p class="event__destination-description">${he.encode(destination?.description) || ''}</p>
 ${handlePicturesTemplate(destination?.pictures, mode)}
 </section>`
   : '';
@@ -131,6 +132,11 @@ const createTemplate = (point) => {
     }
   };
 
+  const handleDestinationName = () => destinationData?.name
+    ? he.encode(destinationData.name)
+    : '';
+
+
   return (
     `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post" >
@@ -156,7 +162,7 @@ const createTemplate = (point) => {
           <label class="event__label  event__type-output" for="event-destination-1">
             ${capitalize(type)}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationData?.name || ''}" list="destination-list-1" autocomplete="off" required ${isDisabled ? 'disabled' : ''} >
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${handleDestinationName()}" list="destination-list-1" autocomplete="off" required ${isDisabled ? 'disabled' : ''} >
           <datalist id="destination-list-1">
             ${createDestinationCitiesTemplate(allDestinations)}
           </datalist>
@@ -242,6 +248,7 @@ export default class PointEditView extends AbstractStatefulView {
     const update = {
       ...task,
       allOffers: this.#getOffersByPointType(task.type),
+      destinationData: this.#getDestinationById(task)
     };
     this.updateElement(update);
   }
