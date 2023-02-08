@@ -103,14 +103,19 @@ ${handlePicturesTemplate(destination?.pictures, mode)}
 </section>`
   : '';
 
-const handleOffersTemplate = (selectedOffers, allOffers, isDisabled) => allOffers.length !== 0
-  ? `<section class="event__section  event__section--offers" >
-<h3 class="event__section-title  event__section-title--offers">Offers</h3>
-<div class="event__available-offers" >
-  ${createOffersTemplate(selectedOffers, allOffers, isDisabled)}
-</div>
-</section>`
-  : '';
+const handleOffersTemplate = (selectedOffers, allOffers, isDisabled) => {
+  if (allOffers) {
+
+    return allOffers.length !== 0
+      ? `<section class="event__section  event__section--offers" >
+          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+          <div class="event__available-offers" >
+            ${createOffersTemplate(selectedOffers, allOffers, isDisabled)}
+          </div>
+        </section>`
+      : '';
+  }
+};
 
 const handleRollupButton = (mode, isDisabled) => mode
   ? `<button class="event__rollup-btn" type="button" display="none" ${isDisabled ? 'disabled' : ''}>

@@ -22,6 +22,7 @@ import {
   sortByPrice,
   getOffersByPointType
 } from '../utils/point.js';
+import NoAdditionalDataView from '../view/no-additional-data-view.js';
 
 const TimeLimit = {
   LOWER: 350,
@@ -36,6 +37,7 @@ export default class BoardPresenter {
   #filterType = FilterType.EVERYTHING;
   #tripEventsListComponent = new TripEventsListView();
   #loadingComponent = new LoadingView();
+  #noAdditionalDataComponent = null;
   #noPointsComponent = null;
   #sortComponent = null;
   #pointPresenters = new Map ();
@@ -137,7 +139,17 @@ export default class BoardPresenter {
     render(this.#loadingComponent, this.#boardContainer, RenderPosition.BEFOREBEGIN);
   }
 
-  #renderBoard() {
+  #renderEventsListComponent() {
+    render(this.#tripEventsListComponent, this.#boardContainer);
+  }
+
+  #renderBoard(isAllDataRecieved = true) {
+    if (!isAllDataRecieved) {
+      this.#noAdditionalDataComponent = new NoAdditionalDataView;
+      render(this.#noAdditionalDataComponent, this.#boardContainer);
+      return;
+    }
+
     if (this.#isLoading) {
       this.#renderLoading();
       return;
@@ -149,7 +161,7 @@ export default class BoardPresenter {
     }
 
     this.#renderSort();
-    render(this.#tripEventsListComponent, this.#boardContainer);
+    this.#renderEventsListComponent();
     this.points.forEach((point) => this.#renderPoint(point));
   }
 
@@ -168,12 +180,20 @@ export default class BoardPresenter {
       remove(this.#noPointsComponent);
     }
 
+    if (this.#noAdditionalDataComponent) {
+      remove(this.#noAdditionalDataComponent);
+    }
+
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;
     }
   }
 
-  #getOffersByPointType = (pointType) => getOffersByPointType(pointType, this.offers);
+  #getOffersByPointType = (pointType) => {
+    if (this.offers.length > 0) {
+      return getOffersByPointType(pointType, this.offers);
+    }
+  };
 
   #handleViewAction = async (actionType, updateType, update) => {
     this.#uiBlocker.block();
@@ -224,7 +244,7 @@ export default class BoardPresenter {
       case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
-        this.#renderBoard();
+        this.#renderBoard(data);
         break;
     }
   };
