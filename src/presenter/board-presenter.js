@@ -91,7 +91,7 @@ export default class BoardPresenter {
     this.#renderBoard();
   }
 
-  createTask() {
+  createPoint() {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this.#newPointPresenter = new NewPointPresenter({

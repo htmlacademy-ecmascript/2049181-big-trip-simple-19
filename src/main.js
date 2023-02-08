@@ -32,7 +32,7 @@ const filterPresenter = new FilterPresenter({
 });
 
 function handleNewPointButtonClick() {
-  boardPresenter.createTask();
+  boardPresenter.createPoint();
   newPointButton.element.disabled = true;
 }
 
