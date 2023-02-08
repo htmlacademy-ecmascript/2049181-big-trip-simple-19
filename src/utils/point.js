@@ -6,8 +6,11 @@ const DATE_FORMAT = 'YYYY-MM-DD';
 const MINUTES_FORMAT = 'HH:mm';
 const DATE_EDIT_FORMAT = 'DD/MM/YY';
 
-const getOffersByPointType = (pointType, offersByType) => offersByType
-  .find((offer) => offer.type === pointType).offers;
+const getOffersByPointType = (pointType, offersByType) => {
+  if (offersByType) {
+    return offersByType.find((offer) => offer.type === pointType).offers;
+  }
+};
 
 const humanizeTopicDate = (date) => date
   ? dayjs(date).format(DATE_TOPIC_FORMAT)

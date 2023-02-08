@@ -103,14 +103,19 @@ const handleDestinationTemplate = (destination, mode) => destination
     </section>`
   : '';
 
-const handleOffersTemplate = (selectedOffers, allOffers, isDisabled) => allOffers.length !== 0
-  ? `<section class="event__section  event__section--offers" >
-      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-      <div class="event__available-offers" >
-        ${createOffersTemplate(selectedOffers, allOffers, isDisabled)}
-      </div>
-    </section>`
-  : '';
+const handleOffersTemplate = (selectedOffers, allOffers, isDisabled) => {
+  if (allOffers) {
+
+    return allOffers.length !== 0
+      ? `<section class="event__section  event__section--offers" >
+          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+          <div class="event__available-offers" >
+            ${createOffersTemplate(selectedOffers, allOffers, isDisabled)}
+          </div>
+        </section>`
+      : '';
+  }
+};
 
 const handleRollupButton = (mode, isDisabled) => mode
   ? `<button class="event__rollup-btn" type="button" display="none" ${isDisabled ? 'disabled' : ''}>
@@ -350,11 +355,13 @@ export default class PointEditView extends AbstractStatefulView {
 
   #typeButtonClickHandler = (evt) => {
     const pointType = evt.target.innerText.toLowerCase();
-    this.updateElement({
-      type: pointType,
-      allOffers: this.#getOffersByPointType(pointType),
-      offers: (this._state.type === pointType) ? this.#getCheckedOffersIds() : []
-    });
+    if (pointType) {
+      this.updateElement({
+        type: pointType,
+        allOffers: this.#getOffersByPointType(pointType),
+        offers: (this._state.type === pointType) ? this.#getCheckedOffersIds() : []
+      });
+    }
   };
 
   #destinationDatalistChangeHandler = (evt) => {

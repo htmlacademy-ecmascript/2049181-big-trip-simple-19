@@ -32,7 +32,7 @@ const filterPresenter = new FilterPresenter({
 });
 
 function handleNewPointButtonClick() {
-  boardPresenter.createTask();
+  boardPresenter.createPoint();
   newPointButton.element.disabled = true;
 }
 
@@ -43,4 +43,8 @@ function handleNewPointFormClose() {
 filterPresenter.init();
 boardPresenter.init();
 dataModel.init()
-  .finally(() => {render(newPointButton, tripMainElement);});
+  .finally(() => {
+    if(dataModel.isAllDataRecieved) {
+      render(newPointButton, tripMainElement);
+    }
+  });

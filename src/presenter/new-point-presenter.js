@@ -30,7 +30,7 @@ export default class NewPointPresenter {
     }
 
     this.#pointEditComponent = new PointEditView({
-      handleSubmitForm: this.#handleFormSubmit,
+      handleSubmitForm: this.#handleSubmitForm,
       handleDeleteClick: this.#handleDeleteClick,
       allDestinations: this.#allDestinations,
       getOffersByPointType: this.#getOffersByPointType,
@@ -72,7 +72,7 @@ export default class NewPointPresenter {
     this.#pointEditComponent.shake(resetFormState);
   }
 
-  #handleFormSubmit = (point) => {
+  #handleSubmitForm = (point) => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,

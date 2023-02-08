@@ -6,6 +6,7 @@ export default class DataModel extends Observable {
   #points = [];
   #offers = [];
   #destinations = [];
+  #isAllDataRecieved = false;
 
   constructor({dataApiService}) {
     super();
@@ -24,6 +25,10 @@ export default class DataModel extends Observable {
     return this.#destinations;
   }
 
+  get isAllDataRecieved() {
+    return this.#isAllDataRecieved;
+  }
+
   async init() {
     try {
       const points = await this.#dataApiService.points;
@@ -32,6 +37,7 @@ export default class DataModel extends Observable {
       this.#points = points.map(this.#adaptToClient);
       this.#offers = offers;
       this.#destinations = destinations;
+      this.#isAllDataRecieved = true;
 
     } catch(err) {
       this.#points = [];
@@ -39,7 +45,7 @@ export default class DataModel extends Observable {
       this.#destinations = [];
     }
 
-    this._notify(UpdateType.INIT);
+    this._notify(UpdateType.INIT, this.#isAllDataRecieved);
   }
 
   async updatePoint(updateType, update) {
