@@ -31,9 +31,9 @@ const createEventTypeItemTemplate = (type, pointType) => {
 
   return (
     `<div class="event__type-item">
-    <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${handleCheckedClass()}>
-    <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${capitalize(type)}</label>
-  </div>`
+      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${handleCheckedClass()}>
+      <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${capitalize(type)}</label>
+    </div>`
   );};
 
 const createEventTypeItemsTemplate = (allTypes, pointType) => {
@@ -61,13 +61,13 @@ const createOfferTemplate = (offer, selectedOffers, isDisabled) => {
 
   return (
     `<div class="event__offer-selector">
-  <input class="event__offer-checkbox  visually-hidden" id="event-offer-${getOfferName(offer)}-${offer.id}" type="checkbox" name="event-offer-${he.encode(getOfferName(offer))}" ${checked} ${isDisabled ? 'disabled' : ''}>
-  <label class="event__offer-label" for="event-offer-${getOfferName(offer)}-${offer.id}">
-    <span class="event__offer-title">${he.encode(offer.title)}</span>
-    &plus;&euro;&nbsp;
-    <span class="event__offer-price">${offer.price}</span>
-  </label>
-</div>`
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${getOfferName(offer)}-${offer.id}" type="checkbox" name="event-offer-${he.encode(getOfferName(offer))}" ${checked} ${isDisabled ? 'disabled' : ''}>
+      <label class="event__offer-label" for="event-offer-${getOfferName(offer)}-${offer.id}">
+       <span class="event__offer-title">${he.encode(offer.title)}</span>
+       &plus;&euro;&nbsp;
+       <span class="event__offer-price">${offer.price}</span>
+      </label>
+      </div>`
   );
 };
 
@@ -97,10 +97,10 @@ const handlePicturesTemplate = (pictures, mode) => (pictures && !mode) ?
 
 const handleDestinationTemplate = (destination, mode) => destination
   ? `<section class="event__section  event__section--destination">
-<h3 class="event__section-title  event__section-title--destination">Destination</h3>
-<p class="event__destination-description">${he.encode(destination?.description) || ''}</p>
-${handlePicturesTemplate(destination?.pictures, mode)}
-</section>`
+      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      <p class="event__destination-description">${he.encode(destination?.description) || ''}</p>
+      ${handlePicturesTemplate(destination?.pictures, mode)}
+    </section>`
   : '';
 
 const handleOffersTemplate = (selectedOffers, allOffers, isDisabled) => {
@@ -119,11 +119,11 @@ const handleOffersTemplate = (selectedOffers, allOffers, isDisabled) => {
 
 const handleRollupButton = (mode, isDisabled) => mode
   ? `<button class="event__rollup-btn" type="button" display="none" ${isDisabled ? 'disabled' : ''}>
-<span class="visually-hidden">Open event</span>
-</button>`
+      <span class="visually-hidden">Open event</span>
+    </button>`
   : `<button class="event__rollup-btn" type="button" display="none" style="display: none ">
-  <span class="visually-hidden">Open event</span>
-  </button>`;
+       <span class="visually-hidden">Open event</span>
+    </button>`;
 
 const createTemplate = (point) => {
   const {basePrice, dateFrom, dateTo, destinationData, type, offers, allOffers, allDestinations, mode, isDisabled, isSaving, isDeleting} = point;
@@ -144,8 +144,8 @@ const createTemplate = (point) => {
 
   return (
     `<li class="trip-events__item">
-    <form class="event event--edit" action="#" method="post" >
-      <header class="event__header">
+      <form class="event event--edit" action="#" method="post" >
+        <header class="event__header">
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
             <span class="visually-hidden">Choose event type</span>
@@ -156,9 +156,7 @@ const createTemplate = (point) => {
           <div class="event__type-list">
             <fieldset class="event__type-group">
               <legend class="visually-hidden">Event type</legend>
-
               ${createEventTypeItemsTemplate(TYPES, point.type)}
-
             </fieldset>
           </div>
         </div>
@@ -192,12 +190,12 @@ const createTemplate = (point) => {
         <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving' : 'Save'}</button>
         <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${handleResetButtonName(basePrice)}</button>
         ${handleRollupButton(mode, isDisabled)}
-      </header>
-      <section class="event__details">
+        </header>
+        <section class="event__details">
             ${handleOffersTemplate(offers, allOffers, isDisabled)}
             ${handleDestinationTemplate(destinationData, mode)}
-      </section>
-    </form>
+        </section>
+      </form>
   </li>`
   );
 };
