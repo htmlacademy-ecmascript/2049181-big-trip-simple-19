@@ -357,11 +357,13 @@ export default class PointEditView extends AbstractStatefulView {
 
   #typeButtonClickHandler = (evt) => {
     const pointType = evt.target.innerText.toLowerCase();
-    this.updateElement({
-      type: pointType,
-      allOffers: this.#getOffersByPointType(pointType),
-      offers: (this._state.type === pointType) ? this.#getCheckedOffersIds() : []
-    });
+    if (pointType) {
+      this.updateElement({
+        type: pointType,
+        allOffers: this.#getOffersByPointType(pointType),
+        offers: (this._state.type === pointType) ? this.#getCheckedOffersIds() : []
+      });
+    }
   };
 
   #destinationDatalistChangeHandler = (evt) => {
