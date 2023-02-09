@@ -350,6 +350,10 @@ export default class PointEditView extends AbstractStatefulView {
   };
 
   #typeButtonClickHandler = (evt) => {
+    if (evt.target.tagName !== 'LABEL') {
+      return;
+    }
+
     const pointType = evt.target.innerText.toLowerCase();
     if (pointType) {
       this.updateElement({
