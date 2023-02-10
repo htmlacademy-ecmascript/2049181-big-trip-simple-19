@@ -156,6 +156,7 @@ export default class BoardPresenter {
     }
 
     if (this.points.length < 1) {
+      this.#renderEventsListComponent();
       this.#renderNoPoints();
       return;
     }
