@@ -97,7 +97,7 @@ export default class BoardPresenter {
     this.#newPointPresenter = new NewPointPresenter({
       boardContainer: this.#boardContainer,
       onDataChange: this.#handleViewAction,
-      onDestroy: this.#handleNewPointDesroy,
+      onDestroy: this.#handleNewPointDestroy,
       allDestinations: this.destinations,
       getOffersByPointType: this.#getOffersByPointType
     });
@@ -271,7 +271,7 @@ export default class BoardPresenter {
     this.#renderBoard();
   };
 
-  #handleNewPointDesroy = () => {
+  #handleNewPointDestroy = () => {
     this.#onNewPointDestroy();
 
     if (this.points.length < 1) {
