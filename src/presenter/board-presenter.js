@@ -97,12 +97,15 @@ export default class BoardPresenter {
     this.#newPointPresenter = new NewPointPresenter({
       boardContainer: this.#boardContainer,
       onDataChange: this.#handleViewAction,
-      onDestroy: this.#onNewPointDestroy,
+      onDestroy: this.#handleNewPointDesroy,
       allDestinations: this.destinations,
       getOffersByPointType: this.#getOffersByPointType
     });
 
     this.#newPointPresenter.init();
+    if (this.#noPointsComponent) {
+      remove(this.#noPointsComponent);
+    }
   }
 
   #renderPoint(point) {
@@ -266,5 +269,14 @@ export default class BoardPresenter {
     this.#currentSortType = sortType;
     this.#clearBoard();
     this.#renderBoard();
+  };
+
+  #handleNewPointDesroy = () => {
+    this.#onNewPointDestroy();
+
+    if (this.points.length < 1) {
+      this.#renderEventsListComponent();
+      this.#renderNoPoints();
+    }
   };
 }
